@@ -17,4 +17,8 @@ networks:
     - event: ModuleTemplateCreated(string moduleName, address moduleAddress, (uint256,string) moduleInfo)
     - event: ModuleTemplateDeleted(string moduleName, address moduleAddress)
     - event: ModuleCloned(address moduleAddress, string moduleName, string filterTag)
-    # - event: ContestBuilt(string votesModule, string pointsModule, string choicesModule, string executionModule, address contestAddress, string contestVersion, string filterTag)
+  - name: HatsAllowList
+    handler: src/HatsAllowList.ts
+    events: 
+    - event: Initialized(address contest, address hatsAddress, uint256 hatId)
+

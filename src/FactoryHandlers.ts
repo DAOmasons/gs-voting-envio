@@ -1,22 +1,9 @@
-/*
- *Please refer to https://docs.envio.dev for a thorough guide on all Envio indexer features*
- */
 import {
   FastFactoryContract,
-  // FastFactory_AdminAddedEntity,
-  // FastFactory_AdminRemovedEntity,
-  // FastFactory_ContestBuiltEntity,
-  // FastFactory_ContestTemplateCreatedEntity,
-  // FastFactory_ContestTemplateDeletedEntity,
-  // FastFactory_FactoryInitializedEntity,
-  // FastFactory_ModuleClonedEntity,
-  // FastFactory_ModuleTemplateCreatedEntity,
-  // FastFactory_ModuleTemplateDeletedEntity,
   FactoryEventsSummaryEntity,
   ContestTemplateEntity,
-  // ContestEntity,
-  // ContestModuleEntity,
 } from 'generated';
+import { indexerModuleFactory } from './utils/dynamicIndexing';
 
 export const FACTORY_EVENTS_SUMMARY_KEY = 'GlobalEventsSummary';
 const FACTORY_ADDRESS = '0x1670EEfb9B638243559b6Fcc7D6d3e6f9d4Ca5Fc';
@@ -28,14 +15,6 @@ const FACTORY_EVENTS_SUMMARY: FactoryEventsSummaryEntity = {
   contestTemplateCount: 0n,
   moduleTemplateCount: 0n,
   moduleCloneCount: 0n,
-  // fastFactory_AdminAddedCount: BigInt(0),
-  // fastFactory_AdminRemovedCount: BigInt(0),
-  // fastFactory_ContestBuiltCount: BigInt(0),
-  // fastFactory_ContestTemplateCreatedCount: BigInt(0),
-  // fastFactory_ContestTemplateDeletedCount: BigInt(0),
-  // fastFactory_ModuleClonedCount: BigInt(0),
-  // fastFactory_ModuleTemplateCreatedCount: BigInt(0),
-  // fastFactory_ModuleTemplateDeletedCount: BigInt(0),
 };
 
 /// ===============================
@@ -217,7 +196,7 @@ FastFactoryContract.ModuleTemplateCreated.handler(({ event, context }) => {
 /// === DELETE MODULE TEMPLATE ====
 /// ===============================
 
-FastFactoryContract.ModuleTemplateDeleted.loader(({ context }) => {
+FastFactoryContract.ModuleTemplateDeleted.loader(({ event, context }) => {
   context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
 });
 
@@ -248,8 +227,9 @@ FastFactoryContract.ModuleTemplateDeleted.handler(({ event, context }) => {
   });
 });
 
-FastFactoryContract.ModuleCloned.loader(({ context }) => {
+FastFactoryContract.ModuleCloned.loader(({ event, context }) => {
   context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
+  indexerModuleFactory(event, context);
 });
 
 FastFactoryContract.ModuleCloned.handler(({ event, context }) => {

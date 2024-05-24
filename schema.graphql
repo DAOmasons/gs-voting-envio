@@ -5,32 +5,6 @@ type FactoryEventsSummary {
   contestTemplateCount: BigInt!
   moduleTemplateCount: BigInt!
   moduleCloneCount: BigInt!
-  # fastFactory_AdminAdded: [FastFactory_AdminAdded!]!
-  #   @derivedFrom(field: "eventsSummary")
-  # fastFactory_AdminAddedCount: BigInt!
-  # fastFactory_AdminRemoved: [FastFactory_AdminRemoved!]!
-  #   @derivedFrom(field: "eventsSummary")
-  # fastFactory_AdminRemovedCount: BigInt!
-  # fastFactory_ContestBuilt: [FastFactory_ContestBuilt!]!
-  #   @derivedFrom(field: "eventsSummary")
-  # fastFactory_ContestBuiltCount: BigInt!
-  # fastFactory_ContestTemplateCreated: [FastFactory_ContestTemplateCreated!]!
-  #   @derivedFrom(field: "eventsSummary")
-  # fastFactory_ContestTemplateCreatedCount: BigInt!
-  # fastFactory_ContestTemplateDeleted: [FastFactory_ContestTemplateDeleted!]!
-  #   @derivedFrom(field: "eventsSummary")
-  # fastFactory_ContestTemplateDeletedCount: BigInt!
-  # fastFactory_FactoryInitialized: [FastFactory_FactoryInitialized!]!
-  #   @derivedFrom(field: "eventsSummary")
-  # fastFactory_ModuleCloned: [FastFactory_ModuleCloned!]!
-  #   @derivedFrom(field: "eventsSummary")
-  # fastFactory_ModuleClonedCount: BigInt!
-  # fastFactory_ModuleTemplateCreated: [FastFactory_ModuleTemplateCreated!]!
-  #   @derivedFrom(field: "eventsSummary")
-  # fastFactory_ModuleTemplateCreatedCount: BigInt!
-  # fastFactory_ModuleTemplateDeleted: [FastFactory_ModuleTemplateDeleted!]!
-  #   @derivedFrom(field: "eventsSummary")
-  # fastFactory_ModuleTemplateDeletedCount: BigInt!
 }
 
 type ContestTemplate {
