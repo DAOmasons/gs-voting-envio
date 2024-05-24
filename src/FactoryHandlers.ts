@@ -25,7 +25,8 @@ const FACTORY_EVENTS_SUMMARY: FactoryEventsSummaryEntity = {
   id: FACTORY_EVENTS_SUMMARY_KEY,
   address: FACTORY_ADDRESS,
   admins: [],
-  contestTemplateCount: 1n,
+  contestTemplateCount: 0n,
+  moduleTemplateCount: 0n,
   // fastFactory_AdminAddedCount: BigInt(0),
   // fastFactory_AdminRemovedCount: BigInt(0),
   // fastFactory_ContestBuiltCount: BigInt(0),
@@ -162,6 +163,10 @@ FastFactoryContract.ContestTemplateDeleted.handler(({ event, context }) => {
 
   const contest = context.ContestTemplate.get(event.params.contestVersion);
 
+  context.log.info(
+    `ContestTemplate with version ${event.params.contestVersion}`
+  );
+
   if (!contest) {
     context.log.error(
       `ContestTemplate with version ${event.params.contestVersion} not found`
@@ -176,6 +181,44 @@ FastFactoryContract.ContestTemplateDeleted.handler(({ event, context }) => {
 
   context.FactoryEventsSummary.set(nextSummaryEntity);
   context.ContestTemplate.set(deletedContestTemplate);
+});
+
+/// ===============================
+/// ==== ADD MODULE TEMPLATE ======
+/// ===============================
+
+FastFactoryContract.ModuleTemplateCreated.loader(({ context }) => {
+  context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
+});
+
+FastFactoryContract.ModuleTemplateCreated.handler(({ event, context }) => {
+  const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
+
+  const currentSummaryEntity: FactoryEventsSummaryEntity =
+    summary ?? FACTORY_EVENTS_SUMMARY;
+
+  const nextSummaryEntity = {
+    ...currentSummaryEntity,
+    moduleTemplateCount: currentSummaryEntity.moduleTemplateCount + 1n,
+  };
+
+  context.FactoryEventsSummary.set(nextSummaryEntity);
+  context.ModuleTemplate.set({
+    id: event.params.moduleAddress,
+    templateAddress: event.params.moduleAddress,
+    moduleName: event.params.moduleName,
+    mdProtocol: event.params.moduleInfo[0],
+    mdPointer: event.params.moduleInfo[1],
+    active: true,
+  });
+});
+
+/// ===============================
+/// === DELETE MODULE TEMPLATE ====
+/// ===============================
+
+FastFactoryContract.ModuleTemplateCreated.loader(({ context }) => {
+  context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
 });
 
 // FastFactoryContract.ContestBuilt.handler(({ event, context }) => {
