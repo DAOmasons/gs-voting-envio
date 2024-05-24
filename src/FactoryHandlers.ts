@@ -204,7 +204,7 @@ FastFactoryContract.ModuleTemplateCreated.handler(({ event, context }) => {
 
   context.FactoryEventsSummary.set(nextSummaryEntity);
   context.ModuleTemplate.set({
-    id: event.params.moduleAddress,
+    id: event.params.moduleName,
     templateAddress: event.params.moduleAddress,
     moduleName: event.params.moduleName,
     mdProtocol: event.params.moduleInfo[0],
@@ -217,8 +217,35 @@ FastFactoryContract.ModuleTemplateCreated.handler(({ event, context }) => {
 /// === DELETE MODULE TEMPLATE ====
 /// ===============================
 
-FastFactoryContract.ModuleTemplateCreated.loader(({ context }) => {
+FastFactoryContract.ModuleTemplateDeleted.loader(({ context }) => {
   context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
+});
+
+FastFactoryContract.ModuleTemplateDeleted.handler(({ event, context }) => {
+  const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
+
+  const currentSummaryEntity: FactoryEventsSummaryEntity =
+    summary ?? FACTORY_EVENTS_SUMMARY;
+
+  const nextSummaryEntity = {
+    ...currentSummaryEntity,
+    moduleTemplateCount: currentSummaryEntity.moduleTemplateCount - 1n,
+  };
+
+  const module = context.ModuleTemplate.get(event.params.moduleName);
+
+  if (!module) {
+    context.log.error(
+      `ModuleTemplate with address ${event.params.moduleName} not found`
+    );
+    return;
+  }
+
+  context.FactoryEventsSummary.set(nextSummaryEntity);
+  context.ModuleTemplate.set({
+    ...module,
+    active: false,
+  });
 });
 
 // FastFactoryContract.ContestBuilt.handler(({ event, context }) => {
