@@ -27,6 +27,7 @@ const FACTORY_EVENTS_SUMMARY: FactoryEventsSummaryEntity = {
   admins: [],
   contestTemplateCount: 0n,
   moduleTemplateCount: 0n,
+  moduleCloneCount: 0n,
   // fastFactory_AdminAddedCount: BigInt(0),
   // fastFactory_AdminRemovedCount: BigInt(0),
   // fastFactory_ContestBuiltCount: BigInt(0),
@@ -147,7 +148,6 @@ FastFactoryContract.ContestTemplateCreated.handler(({ event, context }) => {
 
 FastFactoryContract.ContestTemplateDeleted.loader(({ event, context }) => {
   context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
-  // context.ContestTemplate.load(event.params.contestVersion);
 });
 
 FastFactoryContract.ContestTemplateDeleted.handler(({ event, context }) => {
@@ -246,6 +246,31 @@ FastFactoryContract.ModuleTemplateDeleted.handler(({ event, context }) => {
     ...module,
     active: false,
   });
+});
+
+FastFactoryContract.ModuleCloned.loader(({ context }) => {
+  context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
+});
+
+FastFactoryContract.ModuleCloned.handler(({ event, context }) => {
+  const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
+
+  const currentSummaryEntity: FactoryEventsSummaryEntity =
+    summary ?? FACTORY_EVENTS_SUMMARY;
+
+  const nextSummaryEntity = {
+    ...currentSummaryEntity,
+    moduleCloneCount: currentSummaryEntity.moduleCloneCount + 1n,
+  };
+
+  context.StemModule.set({
+    id: event.params.moduleAddress,
+    moduleAddress: event.params.moduleAddress,
+    moduleName: event.params.moduleName,
+    filterTag: event.params.filterTag,
+    moduleTemplate_id: event.params.moduleName,
+  });
+  context.FactoryEventsSummary.set(nextSummaryEntity);
 });
 
 // FastFactoryContract.ContestBuilt.handler(({ event, context }) => {

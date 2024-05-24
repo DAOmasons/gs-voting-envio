@@ -4,6 +4,7 @@ type FactoryEventsSummary {
   admins: [String!]!
   contestTemplateCount: BigInt!
   moduleTemplateCount: BigInt!
+  moduleCloneCount: BigInt!
   # fastFactory_AdminAdded: [FastFactory_AdminAdded!]!
   #   @derivedFrom(field: "eventsSummary")
   # fastFactory_AdminAddedCount: BigInt!
@@ -48,6 +49,14 @@ type ModuleTemplate {
   mdProtocol: BigInt!
   mdPointer: String!
   active: Boolean!
+}
+
+type StemModule {
+  id: ID!
+  moduleAddress: String!
+  moduleName: String!
+  moduleTemplate: ModuleTemplate!
+  filterTag: String!
 }
 
 # type FastFactory_AdminAdded {

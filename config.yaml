@@ -16,5 +16,5 @@ networks:
     - event: ContestTemplateDeleted(string contestVersion, address contestAddress)
     - event: ModuleTemplateCreated(string moduleName, address moduleAddress, (uint256,string) moduleInfo)
     - event: ModuleTemplateDeleted(string moduleName, address moduleAddress)
-    # - event: ModuleCloned(address moduleAddress, string moduleName, string filterTag)
+    - event: ModuleCloned(address moduleAddress, string moduleName, string filterTag)
     # - event: ContestBuilt(string votesModule, string pointsModule, string choicesModule, string executionModule, address contestAddress, string contestVersion, string filterTag)
