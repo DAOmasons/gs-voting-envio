@@ -13,6 +13,7 @@ import {
   // FastFactory_ModuleTemplateCreatedEntity,
   // FastFactory_ModuleTemplateDeletedEntity,
   FactoryEventsSummaryEntity,
+  ContestTemplateEntity,
   // ContestEntity,
   // ContestModuleEntity,
 } from 'generated';
@@ -24,6 +25,7 @@ const FACTORY_EVENTS_SUMMARY: FactoryEventsSummaryEntity = {
   id: FACTORY_EVENTS_SUMMARY_KEY,
   address: FACTORY_ADDRESS,
   admins: [],
+  contestTemplateCount: 1n,
   // fastFactory_AdminAddedCount: BigInt(0),
   // fastFactory_AdminRemovedCount: BigInt(0),
   // fastFactory_ContestBuiltCount: BigInt(0),
@@ -106,30 +108,36 @@ FastFactoryContract.AdminRemoved.handler(({ event, context }) => {
   context.FactoryEventsSummary.set(nextSummaryEntity);
 });
 
-// FastFactoryContract.AdminRemoved.handler(({ event, context }) => {
-//   const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
+/// ===============================
+/// ==== ADD CONTEST TEMPLATE =====
+/// ===============================
 
-//   const currentSummaryEntity: FactoryEventsSummaryEntity =
-//     summary ?? FACTORY_EVENTS_SUMMARY;
+FastFactoryContract.ContestTemplateCreated.loader(({ context }) => {
+  context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
+});
 
-//   const nextSummaryEntity = {
-//     ...currentSummaryEntity,
-//     fastFactory_AdminRemovedCount:
-//       currentSummaryEntity.fastFactory_AdminRemovedCount + BigInt(1),
-//   };
+FastFactoryContract.ContestTemplateCreated.handler(({ event, context }) => {
+  const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
 
-//   const fastFactory_AdminRemovedEntity: FastFactory_AdminRemovedEntity = {
-//     id: event.transactionHash + event.logIndex.toString(),
-//     admin: event.params.admin,
-//     eventsSummary: FACTORY_EVENTS_SUMMARY_KEY,
-//   };
+  const currentSummaryEntity: FactoryEventsSummaryEntity =
+    summary ?? FACTORY_EVENTS_SUMMARY;
 
-//   context.FactoryEventsSummary.set(nextSummaryEntity);
-//   context.FastFactory_AdminRemoved.set(fastFactory_AdminRemovedEntity);
-// });
-// FastFactoryContract.ContestBuilt.loader(({ event, context }) => {
-//   context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
-// });
+  const nextSummaryEntity = {
+    ...currentSummaryEntity,
+    contestTemplateCount: currentSummaryEntity.contestTemplateCount + 1n,
+  };
+
+  const contestTemplate: ContestTemplateEntity = {
+    id: event.params.contestVersion,
+    contestVersion: event.params.contestVersion,
+    contestAddress: event.params.contestAddress,
+    mdProtocol: event.params.contestInfo[0],
+    mdPointer: event.params.contestInfo[1],
+  };
+
+  context.FactoryEventsSummary.set(nextSummaryEntity);
+  context.ContestTemplate.set(contestTemplate);
+});
 
 // FastFactoryContract.ContestBuilt.handler(({ event, context }) => {
 //   const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
