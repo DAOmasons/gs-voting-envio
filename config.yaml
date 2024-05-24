@@ -21,4 +21,12 @@ networks:
     handler: src/HatsAllowList.ts
     events: 
     - event: Initialized(address contest, address hatsAddress, uint256 hatId)
+  - name: ERC20VotesPoints
+    handler: src/ERC20VotesPoints.ts
+    events:
+    - event: Initialized(address contest, address token, uint256 votingCheckpoint)
+  - name: TimedVotes
+    handler: src/TimedVotes.ts
+    events:
+    - event: Initialized(address contest, uint256 duration)
 

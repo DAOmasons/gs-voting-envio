@@ -12,4 +12,12 @@ export const indexerModuleFactory = (
   if (event.params.moduleName === Module.HatsAllowList_v0_1_0) {
     context.contractRegistration.addHatsAllowList(event.params.moduleAddress);
   }
+  if (event.params.moduleName === Module.TimedVotes_v0_1_0) {
+    context.contractRegistration.addTimedVotes(event.params.moduleAddress);
+  }
+  if (event.params.moduleName === Module.ERC20VotesPoints_v0_1_0) {
+    context.contractRegistration.addERC20VotesPoints(
+      event.params.moduleAddress
+    );
+  }
 };
