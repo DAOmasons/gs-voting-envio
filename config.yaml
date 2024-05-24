@@ -10,10 +10,10 @@ networks:
     handler: src/FactoryHandlers.ts
     events:
     - event: FactoryInitialized(address admin)
-    # - event: AdminAdded(address admin)
-    # - event: AdminRemoved(address admin)
+    - event: AdminAdded(address admin)
+    - event: AdminRemoved(address admin)
+    - event: ContestTemplateCreated(string contestVersion, address contestAddress, (uint256,string) contestInfo)
     # - event: ContestBuilt(string votesModule, string pointsModule, string choicesModule, string executionModule, address contestAddress, string contestVersion, string filterTag)
-    # - event: ContestTemplateCreated(string contestVersion, address contestAddress, (uint256,string) contestInfo)
     # - event: ContestTemplateDeleted(string contestVersion, address contestAddress)
     # - event: ModuleCloned(address moduleAddress, string moduleName, string filterTag)
     # - event: ModuleTemplateCreated(string moduleName, address moduleAddress, (uint256,string) moduleInfo)

@@ -1,6 +1,8 @@
-type EventsSummary {
+type FactoryEventsSummary {
   id: ID!
   address: String!
+  admins: [String!]!
+  contestTemplateCount: BigInt!
   # fastFactory_AdminAdded: [FastFactory_AdminAdded!]!
   #   @derivedFrom(field: "eventsSummary")
   # fastFactory_AdminAddedCount: BigInt!
@@ -27,6 +29,14 @@ type EventsSummary {
   # fastFactory_ModuleTemplateDeleted: [FastFactory_ModuleTemplateDeleted!]!
   #   @derivedFrom(field: "eventsSummary")
   # fastFactory_ModuleTemplateDeletedCount: BigInt!
+}
+
+type ContestTemplate {
+  id: ID!
+  contestVersion: String!
+  contestAddress: String!
+  mdProtocol: BigInt!
+  mdPointer: String!
 }
 
 # type FastFactory_AdminAdded {

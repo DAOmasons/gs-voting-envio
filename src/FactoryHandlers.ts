@@ -12,17 +12,18 @@ import {
   // FastFactory_ModuleClonedEntity,
   // FastFactory_ModuleTemplateCreatedEntity,
   // FastFactory_ModuleTemplateDeletedEntity,
-  EventsSummaryEntity,
+  FactoryEventsSummaryEntity,
   // ContestEntity,
   // ContestModuleEntity,
 } from 'generated';
 
-export const GLOBAL_EVENTS_SUMMARY_KEY = 'GlobalEventsSummary';
+export const FACTORY_EVENTS_SUMMARY_KEY = 'GlobalEventsSummary';
 const FACTORY_ADDRESS = '0x1670EEfb9B638243559b6Fcc7D6d3e6f9d4Ca5Fc';
 
-const INITIAL_EVENTS_SUMMARY: EventsSummaryEntity = {
-  id: GLOBAL_EVENTS_SUMMARY_KEY,
+const FACTORY_EVENTS_SUMMARY: FactoryEventsSummaryEntity = {
+  id: FACTORY_EVENTS_SUMMARY_KEY,
   address: FACTORY_ADDRESS,
+  admins: [],
   // fastFactory_AdminAddedCount: BigInt(0),
   // fastFactory_AdminRemovedCount: BigInt(0),
   // fastFactory_ContestBuiltCount: BigInt(0),
@@ -33,59 +34,83 @@ const INITIAL_EVENTS_SUMMARY: EventsSummaryEntity = {
   // fastFactory_ModuleTemplateDeletedCount: BigInt(0),
 };
 
-FastFactoryContract.FactoryInitialized.loader(({ event, context }) => {
-  context.EventsSummary.load(GLOBAL_EVENTS_SUMMARY_KEY);
+/// ===============================
+/// ======= FACTORY INIT ==========
+/// ===============================
+
+FastFactoryContract.FactoryInitialized.loader(({ context }) => {
+  context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
 });
 
 FastFactoryContract.FactoryInitialized.handler(({ event, context }) => {
-  const summary = context.EventsSummary.get(GLOBAL_EVENTS_SUMMARY_KEY);
+  const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
 
-  const fastFactory_FactoryInitializedEntity: FastFactory_FactoryInitializedEntity =
-    {
-      id: event.transactionHash + event.logIndex.toString(),
-      admin: event.params.admin,
-      eventsSummary: GLOBAL_EVENTS_SUMMARY_KEY,
-    };
+  const admin = event.params.admin;
 
-  context.FastFactory_FactoryInitialized.set(
-    fastFactory_FactoryInitializedEntity
-  );
+  const currentSummaryEntity: FactoryEventsSummaryEntity =
+    summary ?? FACTORY_EVENTS_SUMMARY;
+
+  context.FactoryEventsSummary.set({
+    ...currentSummaryEntity,
+    admins: [...currentSummaryEntity.admins, admin],
+  });
 });
 
-// FastFactoryContract.AdminAdded.loader(({ event, context }) => {
-//   context.EventsSummary.load(GLOBAL_EVENTS_SUMMARY_KEY);
-// });
+/// ===============================
+/// ======= ADMIN ADDED ===========
+/// ===============================
 
-// FastFactoryContract.AdminAdded.handler(({ event, context }) => {
-//   const summary = context.EventsSummary.get(GLOBAL_EVENTS_SUMMARY_KEY);
+FastFactoryContract.AdminAdded.loader(({ context }) => {
+  context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
+});
 
-//   const currentSummaryEntity: EventsSummaryEntity =
-//     summary ?? INITIAL_EVENTS_SUMMARY;
+FastFactoryContract.AdminAdded.handler(({ event, context }) => {
+  const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
 
-//   const nextSummaryEntity = {
-//     ...currentSummaryEntity,
-//     fastFactory_AdminAddedCount:
-//       currentSummaryEntity.fastFactory_AdminAddedCount + BigInt(1),
-//   };
+  const currentSummaryEntity: FactoryEventsSummaryEntity =
+    summary ?? FACTORY_EVENTS_SUMMARY;
 
-//   const fastFactory_AdminAddedEntity: FastFactory_AdminAddedEntity = {
-//     id: event.transactionHash + event.logIndex.toString(),
-//     admin: event.params.admin,
-//     eventsSummary: GLOBAL_EVENTS_SUMMARY_KEY,
-//   };
+  const newAdmin = event.params.admin;
 
-//   context.EventsSummary.set(nextSummaryEntity);
-//   context.FastFactory_AdminAdded.set(fastFactory_AdminAddedEntity);
-// });
-// FastFactoryContract.AdminRemoved.loader(({ event, context }) => {
-//   context.EventsSummary.load(GLOBAL_EVENTS_SUMMARY_KEY);
-// });
+  const nextSummaryEntity = {
+    ...currentSummaryEntity,
+    admins: [...currentSummaryEntity.admins, newAdmin],
+  };
+
+  context.FactoryEventsSummary.set(nextSummaryEntity);
+});
+
+/// ===============================
+/// ======= ADMIN REMOVED =========
+/// ===============================
+
+FastFactoryContract.AdminRemoved.loader(({ context }) => {
+  context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
+});
+
+FastFactoryContract.AdminRemoved.handler(({ event, context }) => {
+  const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
+
+  const currentSummaryEntity: FactoryEventsSummaryEntity =
+    summary ?? FACTORY_EVENTS_SUMMARY;
+
+  const removedAdmin = event.params.admin;
+
+  const nextSummaryEntity = {
+    ...currentSummaryEntity,
+    admins: currentSummaryEntity.admins.filter(
+      (admin) => admin !== removedAdmin
+    ),
+  };
+
+  context.FactoryEventsSummary.set(nextSummaryEntity);
+});
 
 // FastFactoryContract.AdminRemoved.handler(({ event, context }) => {
-//   const summary = context.EventsSummary.get(GLOBAL_EVENTS_SUMMARY_KEY);
+//   const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
 
-//   const currentSummaryEntity: EventsSummaryEntity =
-//     summary ?? INITIAL_EVENTS_SUMMARY;
+//   const currentSummaryEntity: FactoryEventsSummaryEntity =
+//     summary ?? FACTORY_EVENTS_SUMMARY;
 
 //   const nextSummaryEntity = {
 //     ...currentSummaryEntity,
@@ -96,21 +121,21 @@ FastFactoryContract.FactoryInitialized.handler(({ event, context }) => {
 //   const fastFactory_AdminRemovedEntity: FastFactory_AdminRemovedEntity = {
 //     id: event.transactionHash + event.logIndex.toString(),
 //     admin: event.params.admin,
-//     eventsSummary: GLOBAL_EVENTS_SUMMARY_KEY,
+//     eventsSummary: FACTORY_EVENTS_SUMMARY_KEY,
 //   };
 
-//   context.EventsSummary.set(nextSummaryEntity);
+//   context.FactoryEventsSummary.set(nextSummaryEntity);
 //   context.FastFactory_AdminRemoved.set(fastFactory_AdminRemovedEntity);
 // });
 // FastFactoryContract.ContestBuilt.loader(({ event, context }) => {
-//   context.EventsSummary.load(GLOBAL_EVENTS_SUMMARY_KEY);
+//   context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
 // });
 
 // FastFactoryContract.ContestBuilt.handler(({ event, context }) => {
-//   const summary = context.EventsSummary.get(GLOBAL_EVENTS_SUMMARY_KEY);
+//   const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
 
-//   const currentSummaryEntity: EventsSummaryEntity =
-//     summary ?? INITIAL_EVENTS_SUMMARY;
+//   const currentSummaryEntity: FactoryEventsSummaryEntity =
+//     summary ?? FACTORY_EVENTS_SUMMARY;
 
 //   const nextSummaryEntity = {
 //     ...currentSummaryEntity,
@@ -127,22 +152,22 @@ FastFactoryContract.FactoryInitialized.handler(({ event, context }) => {
 //     contestAddress: event.params.contestAddress,
 //     contestVersion: event.params.contestVersion,
 //     filterTag: event.params.filterTag,
-//     eventsSummary: GLOBAL_EVENTS_SUMMARY_KEY,
+//     eventsSummary: FACTORY_EVENTS_SUMMARY_KEY,
 //   };
 
-//   context.EventsSummary.set(nextSummaryEntity);
+//   context.FactoryEventsSummary.set(nextSummaryEntity);
 //   context.FastFactory_ContestBuilt.set(fastFactory_ContestBuiltEntity);
 // });
 
 // FastFactoryContract.ContestTemplateCreated.loader(({ event, context }) => {
-//   context.EventsSummary.load(GLOBAL_EVENTS_SUMMARY_KEY);
+//   context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
 // });
 
 // FastFactoryContract.ContestTemplateCreated.handler(({ event, context }) => {
-//   const summary = context.EventsSummary.get(GLOBAL_EVENTS_SUMMARY_KEY);
+//   const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
 
-//   const currentSummaryEntity: EventsSummaryEntity =
-//     summary ?? INITIAL_EVENTS_SUMMARY;
+//   const currentSummaryEntity: FactoryEventsSummaryEntity =
+//     summary ?? FACTORY_EVENTS_SUMMARY;
 
 //   const nextSummaryEntity = {
 //     ...currentSummaryEntity,
@@ -157,23 +182,23 @@ FastFactoryContract.FactoryInitialized.handler(({ event, context }) => {
 //       contestAddress: event.params.contestAddress,
 //       contestInfo_0: event.params.contestInfo[0],
 //       contestInfo_1: event.params.contestInfo[1],
-//       eventsSummary: GLOBAL_EVENTS_SUMMARY_KEY,
+//       eventsSummary: FACTORY_EVENTS_SUMMARY_KEY,
 //     };
 
-//   context.EventsSummary.set(nextSummaryEntity);
+//   context.FactoryEventsSummary.set(nextSummaryEntity);
 //   context.FastFactory_ContestTemplateCreated.set(
 //     fastFactory_ContestTemplateCreatedEntity
 //   );
 // });
 // FastFactoryContract.ContestTemplateDeleted.loader(({ event, context }) => {
-//   context.EventsSummary.load(GLOBAL_EVENTS_SUMMARY_KEY);
+//   context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
 // });
 
 // FastFactoryContract.ContestTemplateDeleted.handler(({ event, context }) => {
-//   const summary = context.EventsSummary.get(GLOBAL_EVENTS_SUMMARY_KEY);
+//   const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
 
-//   const currentSummaryEntity: EventsSummaryEntity =
-//     summary ?? INITIAL_EVENTS_SUMMARY;
+//   const currentSummaryEntity: FactoryEventsSummaryEntity =
+//     summary ?? FACTORY_EVENTS_SUMMARY;
 
 //   const nextSummaryEntity = {
 //     ...currentSummaryEntity,
@@ -186,24 +211,24 @@ FastFactoryContract.FactoryInitialized.handler(({ event, context }) => {
 //       id: event.transactionHash + event.logIndex.toString(),
 //       contestVersion: event.params.contestVersion,
 //       contestAddress: event.params.contestAddress,
-//       eventsSummary: GLOBAL_EVENTS_SUMMARY_KEY,
+//       eventsSummary: FACTORY_EVENTS_SUMMARY_KEY,
 //     };
 
-//   context.EventsSummary.set(nextSummaryEntity);
+//   context.FactoryEventsSummary.set(nextSummaryEntity);
 //   context.FastFactory_ContestTemplateDeleted.set(
 //     fastFactory_ContestTemplateDeletedEntity
 //   );
 // });
 
 // FastFactoryContract.ModuleCloned.loader(({ event, context }) => {
-//   context.EventsSummary.load(GLOBAL_EVENTS_SUMMARY_KEY);
+//   context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
 // });
 
 // FastFactoryContract.ModuleCloned.handler(({ event, context }) => {
-//   const summary = context.EventsSummary.get(GLOBAL_EVENTS_SUMMARY_KEY);
+//   const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
 
-//   const currentSummaryEntity: EventsSummaryEntity =
-//     summary ?? INITIAL_EVENTS_SUMMARY;
+//   const currentSummaryEntity: FactoryEventsSummaryEntity =
+//     summary ?? FACTORY_EVENTS_SUMMARY;
 
 //   const nextSummaryEntity = {
 //     ...currentSummaryEntity,
@@ -216,21 +241,21 @@ FastFactoryContract.FactoryInitialized.handler(({ event, context }) => {
 //     moduleAddress: event.params.moduleAddress,
 //     moduleName: event.params.moduleName,
 //     filterTag: event.params.filterTag,
-//     eventsSummary: GLOBAL_EVENTS_SUMMARY_KEY,
+//     eventsSummary: FACTORY_EVENTS_SUMMARY_KEY,
 //   };
 
-//   context.EventsSummary.set(nextSummaryEntity);
+//   context.FactoryEventsSummary.set(nextSummaryEntity);
 //   context.FastFactory_ModuleCloned.set(fastFactory_ModuleClonedEntity);
 // });
 // FastFactoryContract.ModuleTemplateCreated.loader(({ event, context }) => {
-//   context.EventsSummary.load(GLOBAL_EVENTS_SUMMARY_KEY);
+//   context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
 // });
 
 // FastFactoryContract.ModuleTemplateCreated.handler(({ event, context }) => {
-//   const summary = context.EventsSummary.get(GLOBAL_EVENTS_SUMMARY_KEY);
+//   const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
 
-//   const currentSummaryEntity: EventsSummaryEntity =
-//     summary ?? INITIAL_EVENTS_SUMMARY;
+//   const currentSummaryEntity: FactoryEventsSummaryEntity =
+//     summary ?? FACTORY_EVENTS_SUMMARY;
 
 //   const nextSummaryEntity = {
 //     ...currentSummaryEntity,
@@ -245,23 +270,23 @@ FastFactoryContract.FactoryInitialized.handler(({ event, context }) => {
 //       moduleAddress: event.params.moduleAddress,
 //       moduleInfo_0: event.params.moduleInfo[0],
 //       moduleInfo_1: event.params.moduleInfo[1],
-//       eventsSummary: GLOBAL_EVENTS_SUMMARY_KEY,
+//       eventsSummary: FACTORY_EVENTS_SUMMARY_KEY,
 //     };
 
-//   context.EventsSummary.set(nextSummaryEntity);
+//   context.FactoryEventsSummary.set(nextSummaryEntity);
 //   context.FastFactory_ModuleTemplateCreated.set(
 //     fastFactory_ModuleTemplateCreatedEntity
 //   );
 // });
 // FastFactoryContract.ModuleTemplateDeleted.loader(({ event, context }) => {
-//   context.EventsSummary.load(GLOBAL_EVENTS_SUMMARY_KEY);
+//   context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
 // });
 
 // FastFactoryContract.ModuleTemplateDeleted.handler(({ event, context }) => {
-//   const summary = context.EventsSummary.get(GLOBAL_EVENTS_SUMMARY_KEY);
+//   const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
 
-//   const currentSummaryEntity: EventsSummaryEntity =
-//     summary ?? INITIAL_EVENTS_SUMMARY;
+//   const currentSummaryEntity: FactoryEventsSummaryEntity =
+//     summary ?? FACTORY_EVENTS_SUMMARY;
 
 //   const nextSummaryEntity = {
 //     ...currentSummaryEntity,
@@ -274,10 +299,10 @@ FastFactoryContract.FactoryInitialized.handler(({ event, context }) => {
 //       id: event.transactionHash + event.logIndex.toString(),
 //       moduleName: event.params.moduleName,
 //       moduleAddress: event.params.moduleAddress,
-//       eventsSummary: GLOBAL_EVENTS_SUMMARY_KEY,
+//       eventsSummary: FACTORY_EVENTS_SUMMARY_KEY,
 //     };
 
-//   context.EventsSummary.set(nextSummaryEntity);
+//   context.FactoryEventsSummary.set(nextSummaryEntity);
 //   context.FastFactory_ModuleTemplateDeleted.set(
 //     fastFactory_ModuleTemplateDeletedEntity
 //   );
