@@ -1,0 +1,119 @@
+type EventsSummary {
+  id: ID!
+  address: String!
+  # fastFactory_AdminAdded: [FastFactory_AdminAdded!]!
+  #   @derivedFrom(field: "eventsSummary")
+  # fastFactory_AdminAddedCount: BigInt!
+  # fastFactory_AdminRemoved: [FastFactory_AdminRemoved!]!
+  #   @derivedFrom(field: "eventsSummary")
+  # fastFactory_AdminRemovedCount: BigInt!
+  # fastFactory_ContestBuilt: [FastFactory_ContestBuilt!]!
+  #   @derivedFrom(field: "eventsSummary")
+  # fastFactory_ContestBuiltCount: BigInt!
+  # fastFactory_ContestTemplateCreated: [FastFactory_ContestTemplateCreated!]!
+  #   @derivedFrom(field: "eventsSummary")
+  # fastFactory_ContestTemplateCreatedCount: BigInt!
+  # fastFactory_ContestTemplateDeleted: [FastFactory_ContestTemplateDeleted!]!
+  #   @derivedFrom(field: "eventsSummary")
+  # fastFactory_ContestTemplateDeletedCount: BigInt!
+  # fastFactory_FactoryInitialized: [FastFactory_FactoryInitialized!]!
+  #   @derivedFrom(field: "eventsSummary")
+  # fastFactory_ModuleCloned: [FastFactory_ModuleCloned!]!
+  #   @derivedFrom(field: "eventsSummary")
+  # fastFactory_ModuleClonedCount: BigInt!
+  # fastFactory_ModuleTemplateCreated: [FastFactory_ModuleTemplateCreated!]!
+  #   @derivedFrom(field: "eventsSummary")
+  # fastFactory_ModuleTemplateCreatedCount: BigInt!
+  # fastFactory_ModuleTemplateDeleted: [FastFactory_ModuleTemplateDeleted!]!
+  #   @derivedFrom(field: "eventsSummary")
+  # fastFactory_ModuleTemplateDeletedCount: BigInt!
+}
+
+# type FastFactory_AdminAdded {
+#   id: ID!
+#   admin: String!
+#   eventsSummary: String!
+# }
+
+# type FastFactory_AdminRemoved {
+#   id: ID!
+#   admin: String!
+#   eventsSummary: String!
+# }
+
+# type FastFactory_ContestBuilt {
+#   id: ID!
+#   votesModule: String!
+#   pointsModule: String!
+#   choicesModule: String!
+#   executionModule: String!
+#   contestAddress: String!
+#   contestVersion: String!
+#   filterTag: String!
+#   eventsSummary: String!
+# }
+
+# type FastFactory_ContestTemplateCreated {
+#   id: ID!
+#   contestVersion: String!
+#   contestAddress: String!
+#   contestInfo_0: BigInt!
+#   contestInfo_1: String!
+#   eventsSummary: String!
+# }
+
+# type FastFactory_ContestTemplateDeleted {
+#   id: ID!
+#   contestVersion: String!
+#   contestAddress: String!
+#   eventsSummary: String!
+# }
+
+# type FastFactory_FactoryInitialized {
+#   id: ID!
+#   admin: String!
+#   eventsSummary: String!
+# }
+
+# type FastFactory_ModuleCloned {
+#   id: ID!
+#   moduleAddress: String!
+#   moduleName: String!
+#   filterTag: String!
+#   eventsSummary: String!
+# }
+
+# type FastFactory_ModuleTemplateCreated {
+#   id: ID!
+#   moduleName: String!
+#   moduleAddress: String!
+#   moduleInfo_0: BigInt!
+#   moduleInfo_1: String!
+#   eventsSummary: String!
+# }
+
+# type FastFactory_ModuleTemplateDeleted {
+#   id: ID!
+#   moduleName: String!
+#   moduleAddress: String!
+#   eventsSummary: String!
+# }
+
+# type ContestModule {
+#   id: ID!
+#   contestAddress: String!
+#   version: String!
+#   moduleAddress: String!
+#   moduleType: String!
+# }
+
+# type Contest {
+#   id: ID!
+#   contestAddress: String!
+#   contestVersion: String!
+#   filterTag: String!
+#   votesModule: ContestModule!
+#   pointsModule: ContestModule!
+#   choicesModule: ContestModule!
+#   executionModule: ContestModule!
+# }

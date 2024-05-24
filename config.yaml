@@ -1,0 +1,20 @@
+name: gs-voting
+networks:
+- id: 421614
+  start_block: 0
+  end_block: null
+  contracts:
+  - name: FastFactory
+    address:
+    - 0x1670EEfb9B638243559b6Fcc7D6d3e6f9d4Ca5Fc
+    handler: src/FactoryHandlers.ts
+    events:
+    - event: FactoryInitialized(address admin)
+    # - event: AdminAdded(address admin)
+    # - event: AdminRemoved(address admin)
+    # - event: ContestBuilt(string votesModule, string pointsModule, string choicesModule, string executionModule, address contestAddress, string contestVersion, string filterTag)
+    # - event: ContestTemplateCreated(string contestVersion, address contestAddress, (uint256,string) contestInfo)
+    # - event: ContestTemplateDeleted(string contestVersion, address contestAddress)
+    # - event: ModuleCloned(address moduleAddress, string moduleName, string filterTag)
+    # - event: ModuleTemplateCreated(string moduleName, address moduleAddress, (uint256,string) moduleInfo)
+    # - event: ModuleTemplateDeleted(string moduleName, address moduleAddress)
