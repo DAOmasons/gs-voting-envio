@@ -133,10 +133,49 @@ FastFactoryContract.ContestTemplateCreated.handler(({ event, context }) => {
     contestAddress: event.params.contestAddress,
     mdProtocol: event.params.contestInfo[0],
     mdPointer: event.params.contestInfo[1],
+    active: true,
   };
 
   context.FactoryEventsSummary.set(nextSummaryEntity);
   context.ContestTemplate.set(contestTemplate);
+});
+
+/// ===============================
+/// ==== DELETE CONTEST TEMPLATE ==
+/// ===============================
+
+FastFactoryContract.ContestTemplateDeleted.loader(({ event, context }) => {
+  context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
+  // context.ContestTemplate.load(event.params.contestVersion);
+});
+
+FastFactoryContract.ContestTemplateDeleted.handler(({ event, context }) => {
+  const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
+
+  const currentSummaryEntity: FactoryEventsSummaryEntity =
+    summary ?? FACTORY_EVENTS_SUMMARY;
+
+  const nextSummaryEntity = {
+    ...currentSummaryEntity,
+    contestTemplateCount: currentSummaryEntity.contestTemplateCount - 1n,
+  };
+
+  const contest = context.ContestTemplate.get(event.params.contestVersion);
+
+  if (!contest) {
+    context.log.error(
+      `ContestTemplate with version ${event.params.contestVersion} not found`
+    );
+    return;
+  }
+
+  const deletedContestTemplate: ContestTemplateEntity = {
+    ...contest,
+    active: false,
+  };
+
+  context.FactoryEventsSummary.set(nextSummaryEntity);
+  context.ContestTemplate.set(deletedContestTemplate);
 });
 
 // FastFactoryContract.ContestBuilt.handler(({ event, context }) => {

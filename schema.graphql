@@ -37,6 +37,7 @@ type ContestTemplate {
   contestAddress: String!
   mdProtocol: BigInt!
   mdPointer: String!
+  active: Boolean!
 }
 
 # type FastFactory_AdminAdded {
