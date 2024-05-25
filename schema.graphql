@@ -57,12 +57,36 @@ type Contest {
   isRetractable: Boolean!
 }
 
-type GrantShipsVoting {
-  id: ID!
-  contest: Contest!
-}
-
 type LocalLog {
   id: ID!
   message: String
+}
+
+# Grant Ships Schema
+
+type HALParams {
+  id: ID!
+  hatId: BigInt!
+  hatsAddress: String!
+}
+
+type TVParams {
+  id: ID!
+  voteDuration: BigInt!
+}
+
+type ERCPointParams {
+  id: ID!
+  voteTokenAddress: String!
+  votingCheckpoint: BigInt!
+}
+
+type GrantShipsVoting {
+  id: ID!
+  contest: Contest!
+  hatId: BigInt!
+  hatsAddress: String!
+  voteTokenAddress: String!
+  votingCheckpoint: BigInt!
+  voteDuration: BigInt!
 }

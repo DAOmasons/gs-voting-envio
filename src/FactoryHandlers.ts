@@ -3,11 +3,11 @@ import {
   FactoryEventsSummaryEntity,
   ContestTemplateEntity,
 } from 'generated';
+
 import {
   indexContestVersionFactory,
   indexerModuleFactory,
 } from './utils/dynamicIndexing';
-import { ContestStatus } from './utils/constants';
 
 export const FACTORY_EVENTS_SUMMARY_KEY = 'GlobalEventsSummary';
 const FACTORY_ADDRESS = '0x3a190e45f300cbb8AB1153a90b23EE3333b02D9d';
@@ -32,6 +32,8 @@ FastFactoryContract.FactoryInitialized.loader(({ context }) => {
 });
 
 FastFactoryContract.FactoryInitialized.handler(({ event, context }) => {
+  context.log.info(`Testing logger`);
+
   const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
 
   const admin = event.params.admin;
@@ -147,10 +149,6 @@ FastFactoryContract.ContestTemplateDeleted.handler(({ event, context }) => {
   };
 
   const contest = context.ContestTemplate.get(event.params.contestVersion);
-
-  context.log.info(
-    `ContestTemplate with version ${event.params.contestVersion}`
-  );
 
   if (!contest) {
     context.log.error(
@@ -309,14 +307,4 @@ FastFactoryContract.ContestBuilt.handler(({ event, context }) => {
   };
 
   context.FactoryEventsSummary.set(nextSummaryEntity);
-  // context.GrantShipVoting.set({
-  //   id: event.params.contestAddress,
-  //   contestAddress: event.params.contestAddress,
-  //   contestVersion: event.params.contestVersion,
-  //   filterTag: event.params.filterTag,
-  //   votesModule_id: undefined,
-  //   pointsModule_id: undefined,
-  //   choicesModule_id: undefined,
-  //   contestStatus: BigInt(ContestStatus.Populating),
-  // });
 });
