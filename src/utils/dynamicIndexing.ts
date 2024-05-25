@@ -1,6 +1,6 @@
 import {
-  FastFactoryContract_ContestBuiltEvent_eventArgs,
-  FastFactoryContract_ContestBuiltEvent_loaderContext,
+  FastFactoryContract_ContestClonedEvent_eventArgs,
+  FastFactoryContract_ContestClonedEvent_loaderContext,
   FastFactoryContract_ModuleClonedEvent_eventArgs,
   FastFactoryContract_ModuleClonedEvent_loaderContext,
   eventLog,
@@ -25,10 +25,31 @@ export const indexerModuleFactory = (
 };
 
 export const indexContestVersionFactory = (
-  event: eventLog<FastFactoryContract_ContestBuiltEvent_eventArgs>,
-  context: FastFactoryContract_ContestBuiltEvent_loaderContext
+  event: eventLog<FastFactoryContract_ContestClonedEvent_eventArgs>,
+  context: FastFactoryContract_ContestClonedEvent_loaderContext
 ) => {
   if (event.params.contestVersion === ContestVersion.v0_1_0) {
     context.contractRegistration.addContest_v0_1_0(event.params.contestAddress);
   }
 };
+
+export const isGrantShipsVoting = ({
+  choiceModuleName,
+  votesModuleName,
+  pointsModuleName,
+  executionModuleName,
+  contestVersion,
+}: {
+  choiceModuleName: string;
+  votesModuleName: string;
+  pointsModuleName: string;
+  executionModuleName: string;
+  contestVersion: string;
+}) =>
+  choiceModuleName === Module.HatsAllowList_v0_1_0 &&
+  votesModuleName === Module.TimedVotes_v0_1_0 &&
+  pointsModuleName === Module.ERC20VotesPoints_v0_1_0 &&
+  executionModuleName === Module.EmptyExecutionModule_v0_1_0 &&
+  contestVersion === ContestVersion.v0_1_0
+    ? true
+    : false;

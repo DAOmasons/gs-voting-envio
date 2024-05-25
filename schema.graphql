@@ -6,6 +6,7 @@ type FactoryEventsSummary {
   moduleTemplateCount: BigInt!
   moduleCloneCount: BigInt!
   contestBuiltCount: BigInt!
+  ContestCloneCount: BigInt!
 }
 
 type ContestTemplate {
@@ -35,107 +36,33 @@ type StemModule {
   filterTag: String!
 }
 
-type GrantShipVoting {
+type ContestClone {
+  id: ID!
+  contestAddress: String!
+  contestVersion: String!
+  filterTag: String!
+}
+
+type Contest {
   id: ID!
   contestAddress: String!
   contestVersion: String!
   filterTag: String!
   contestStatus: BigInt!
-  votesModule: StemModule
-  pointsModule: StemModule
-  choicesModule: StemModule
+  votesModule: StemModule!
+  pointsModule: StemModule!
+  executionModule: StemModule!
+  choicesModule: StemModule!
+  isContinuous: Boolean!
+  isRetractable: Boolean!
+}
+
+type GrantShipsVoting {
+  id: ID!
+  contest: Contest!
 }
 
 type LocalLog {
   id: ID!
   message: String
 }
-
-# type FastFactory_AdminAdded {
-#   id: ID!
-#   admin: String!
-#   eventsSummary: String!
-# }
-
-# type FastFactory_AdminRemoved {
-#   id: ID!
-#   admin: String!
-#   eventsSummary: String!
-# }
-
-# type FastFactory_ContestBuilt {
-#   id: ID!
-#   votesModule: String!
-#   pointsModule: String!
-#   choicesModule: String!
-#   executionModule: String!
-#   contestAddress: String!
-#   contestVersion: String!
-#   filterTag: String!
-#   eventsSummary: String!
-# }
-
-# type FastFactory_ContestTemplateCreated {
-#   id: ID!
-#   contestVersion: String!
-#   contestAddress: String!
-#   contestInfo_0: BigInt!
-#   contestInfo_1: String!
-#   eventsSummary: String!
-# }
-
-# type FastFactory_ContestTemplateDeleted {
-#   id: ID!
-#   contestVersion: String!
-#   contestAddress: String!
-#   eventsSummary: String!
-# }
-
-# type FastFactory_FactoryInitialized {
-#   id: ID!
-#   admin: String!
-#   eventsSummary: String!
-# }
-
-# type FastFactory_ModuleCloned {
-#   id: ID!
-#   moduleAddress: String!
-#   moduleName: String!
-#   filterTag: String!
-#   eventsSummary: String!
-# }
-
-# type FastFactory_ModuleTemplateCreated {
-#   id: ID!
-#   moduleName: String!
-#   moduleAddress: String!
-#   moduleInfo_0: BigInt!
-#   moduleInfo_1: String!
-#   eventsSummary: String!
-# }
-
-# type FastFactory_ModuleTemplateDeleted {
-#   id: ID!
-#   moduleName: String!
-#   moduleAddress: String!
-#   eventsSummary: String!
-# }
-
-# type ContestModule {
-#   id: ID!
-#   contestAddress: String!
-#   version: String!
-#   moduleAddress: String!
-#   moduleType: String!
-# }
-
-# type Contest {
-#   id: ID!
-#   contestAddress: String!
-#   contestVersion: String!
-#   filterTag: String!
-#   votesModule: ContestModule!
-#   pointsModule: ContestModule!
-#   choicesModule: ContestModule!
-#   executionModule: ContestModule!
-# }
