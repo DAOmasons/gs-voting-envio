@@ -81,6 +81,15 @@ type ERCPointParams {
   votingCheckpoint: BigInt!
 }
 
+type ShipChoice {
+  id: ID!
+  contest: GrantShipsVoting!
+  mdProtocol: BigInt!
+  mdPointer: String!
+  choiceData: Bytes!
+  active: Boolean!
+}
+
 type GrantShipsVoting {
   id: ID!
   contest: Contest!
@@ -89,4 +98,5 @@ type GrantShipsVoting {
   voteTokenAddress: String!
   votingCheckpoint: BigInt!
   voteDuration: BigInt!
+  choices: [ShipChoice!]! @derivedFrom(field: "contest")
 }

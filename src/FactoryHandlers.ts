@@ -32,8 +32,6 @@ FastFactoryContract.FactoryInitialized.loader(({ context }) => {
 });
 
 FastFactoryContract.FactoryInitialized.handler(({ event, context }) => {
-  context.log.info(`Testing logger`);
-
   const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
 
   const admin = event.params.admin;
