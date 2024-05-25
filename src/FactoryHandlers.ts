@@ -7,6 +7,7 @@ import {
   indexContestVersionFactory,
   indexerModuleFactory,
 } from './utils/dynamicIndexing';
+import { ContestStatus } from './utils/constants';
 
 export const FACTORY_EVENTS_SUMMARY_KEY = 'GlobalEventsSummary';
 const FACTORY_ADDRESS = '0x1670EEfb9B638243559b6Fcc7D6d3e6f9d4Ca5Fc';
@@ -18,6 +19,7 @@ const FACTORY_EVENTS_SUMMARY: FactoryEventsSummaryEntity = {
   contestTemplateCount: 0n,
   moduleTemplateCount: 0n,
   moduleCloneCount: 0n,
+  contestBuiltCount: 0n,
 };
 
 /// ===============================
@@ -252,6 +254,7 @@ FastFactoryContract.ModuleCloned.handler(({ event, context }) => {
     moduleName: event.params.moduleName,
     filterTag: event.params.filterTag,
     moduleTemplate_id: event.params.moduleName,
+    contestAddress: undefined,
   });
   context.FactoryEventsSummary.set(nextSummaryEntity);
 });
@@ -263,4 +266,28 @@ FastFactoryContract.ModuleCloned.handler(({ event, context }) => {
 FastFactoryContract.ContestBuilt.loader(({ event, context }) => {
   context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
   indexContestVersionFactory(event, context);
+});
+
+FastFactoryContract.ContestBuilt.handler(({ event, context }) => {
+  const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
+
+  const currentSummaryEntity: FactoryEventsSummaryEntity =
+    summary ?? FACTORY_EVENTS_SUMMARY;
+
+  const nextSummaryEntity = {
+    ...currentSummaryEntity,
+    contestCloneCount: currentSummaryEntity.contestBuiltCount + 1n,
+  };
+
+  context.FactoryEventsSummary.set(nextSummaryEntity);
+  context.GrantShipVoting.set({
+    id: event.params.contestAddress,
+    contestAddress: event.params.contestAddress,
+    contestVersion: event.params.contestVersion,
+    filterTag: event.params.filterTag,
+    votesModule_id: undefined,
+    pointsModule_id: undefined,
+    choicesModule_id: undefined,
+    contestStatus: BigInt(ContestStatus.None),
+  });
 });

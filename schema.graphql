@@ -5,6 +5,7 @@ type FactoryEventsSummary {
   contestTemplateCount: BigInt!
   moduleTemplateCount: BigInt!
   moduleCloneCount: BigInt!
+  contestBuiltCount: BigInt!
 }
 
 type ContestTemplate {
@@ -28,9 +29,26 @@ type ModuleTemplate {
 type StemModule {
   id: ID!
   moduleAddress: String!
+  contestAddress: String
   moduleName: String!
   moduleTemplate: ModuleTemplate!
   filterTag: String!
+}
+
+type GrantShipVoting {
+  id: ID!
+  contestAddress: String!
+  contestVersion: String!
+  filterTag: String!
+  contestStatus: BigInt!
+  votesModule: StemModule
+  pointsModule: StemModule
+  choicesModule: StemModule
+}
+
+type LocalLog {
+  id: ID!
+  message: String
 }
 
 # type FastFactory_AdminAdded {

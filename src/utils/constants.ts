@@ -8,3 +8,12 @@ export enum Module {
 export enum ContestVersion {
   v0_1_0 = 'v0.1.0',
 }
+
+export enum ContestStatus {
+  None,
+  Populating,
+  Voting,
+  Continuous,
+  Finalized,
+  Executed,
+}
