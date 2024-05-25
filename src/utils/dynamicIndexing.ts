@@ -1,9 +1,11 @@
 import {
+  FastFactoryContract_ContestBuiltEvent_eventArgs,
+  FastFactoryContract_ContestBuiltEvent_loaderContext,
   FastFactoryContract_ModuleClonedEvent_eventArgs,
   FastFactoryContract_ModuleClonedEvent_loaderContext,
   eventLog,
 } from 'generated';
-import { Module } from './constants';
+import { ContestVersion, Module } from './constants';
 
 export const indexerModuleFactory = (
   event: eventLog<FastFactoryContract_ModuleClonedEvent_eventArgs>,
@@ -19,5 +21,14 @@ export const indexerModuleFactory = (
     context.contractRegistration.addERC20VotesPoints(
       event.params.moduleAddress
     );
+  }
+};
+
+export const indexContestVersionFactory = (
+  event: eventLog<FastFactoryContract_ContestBuiltEvent_eventArgs>,
+  context: FastFactoryContract_ContestBuiltEvent_loaderContext
+) => {
+  if (event.params.contestVersion === ContestVersion.v0_1_0) {
+    context.contractRegistration.addContest_v0_1_0(event.params.contestAddress);
   }
 };

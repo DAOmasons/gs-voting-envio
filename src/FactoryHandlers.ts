@@ -3,7 +3,10 @@ import {
   FactoryEventsSummaryEntity,
   ContestTemplateEntity,
 } from 'generated';
-import { indexerModuleFactory } from './utils/dynamicIndexing';
+import {
+  indexContestVersionFactory,
+  indexerModuleFactory,
+} from './utils/dynamicIndexing';
 
 export const FACTORY_EVENTS_SUMMARY_KEY = 'GlobalEventsSummary';
 const FACTORY_ADDRESS = '0x1670EEfb9B638243559b6Fcc7D6d3e6f9d4Ca5Fc';
@@ -253,179 +256,11 @@ FastFactoryContract.ModuleCloned.handler(({ event, context }) => {
   context.FactoryEventsSummary.set(nextSummaryEntity);
 });
 
-// FastFactoryContract.ContestBuilt.handler(({ event, context }) => {
-//   const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
+/// ===============================
+/// ======= CONTEST BUILT =========
+/// ===============================
 
-//   const currentSummaryEntity: FactoryEventsSummaryEntity =
-//     summary ?? FACTORY_EVENTS_SUMMARY;
-
-//   const nextSummaryEntity = {
-//     ...currentSummaryEntity,
-//     fastFactory_ContestBuiltCount:
-//       currentSummaryEntity.fastFactory_ContestBuiltCount + BigInt(1),
-//   };
-
-//   const fastFactory_ContestBuiltEntity: FastFactory_ContestBuiltEntity = {
-//     id: event.transactionHash + event.logIndex.toString(),
-//     votesModule: event.params.votesModule,
-//     pointsModule: event.params.pointsModule,
-//     choicesModule: event.params.choicesModule,
-//     executionModule: event.params.executionModule,
-//     contestAddress: event.params.contestAddress,
-//     contestVersion: event.params.contestVersion,
-//     filterTag: event.params.filterTag,
-//     eventsSummary: FACTORY_EVENTS_SUMMARY_KEY,
-//   };
-
-//   context.FactoryEventsSummary.set(nextSummaryEntity);
-//   context.FastFactory_ContestBuilt.set(fastFactory_ContestBuiltEntity);
-// });
-
-// FastFactoryContract.ContestTemplateCreated.loader(({ event, context }) => {
-//   context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
-// });
-
-// FastFactoryContract.ContestTemplateCreated.handler(({ event, context }) => {
-//   const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
-
-//   const currentSummaryEntity: FactoryEventsSummaryEntity =
-//     summary ?? FACTORY_EVENTS_SUMMARY;
-
-//   const nextSummaryEntity = {
-//     ...currentSummaryEntity,
-//     fastFactory_ContestTemplateCreatedCount:
-//       currentSummaryEntity.fastFactory_ContestTemplateCreatedCount + BigInt(1),
-//   };
-
-//   const fastFactory_ContestTemplateCreatedEntity: FastFactory_ContestTemplateCreatedEntity =
-//     {
-//       id: event.transactionHash + event.logIndex.toString(),
-//       contestVersion: event.params.contestVersion,
-//       contestAddress: event.params.contestAddress,
-//       contestInfo_0: event.params.contestInfo[0],
-//       contestInfo_1: event.params.contestInfo[1],
-//       eventsSummary: FACTORY_EVENTS_SUMMARY_KEY,
-//     };
-
-//   context.FactoryEventsSummary.set(nextSummaryEntity);
-//   context.FastFactory_ContestTemplateCreated.set(
-//     fastFactory_ContestTemplateCreatedEntity
-//   );
-// });
-// FastFactoryContract.ContestTemplateDeleted.loader(({ event, context }) => {
-//   context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
-// });
-
-// FastFactoryContract.ContestTemplateDeleted.handler(({ event, context }) => {
-//   const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
-
-//   const currentSummaryEntity: FactoryEventsSummaryEntity =
-//     summary ?? FACTORY_EVENTS_SUMMARY;
-
-//   const nextSummaryEntity = {
-//     ...currentSummaryEntity,
-//     fastFactory_ContestTemplateDeletedCount:
-//       currentSummaryEntity.fastFactory_ContestTemplateDeletedCount + BigInt(1),
-//   };
-
-//   const fastFactory_ContestTemplateDeletedEntity: FastFactory_ContestTemplateDeletedEntity =
-//     {
-//       id: event.transactionHash + event.logIndex.toString(),
-//       contestVersion: event.params.contestVersion,
-//       contestAddress: event.params.contestAddress,
-//       eventsSummary: FACTORY_EVENTS_SUMMARY_KEY,
-//     };
-
-//   context.FactoryEventsSummary.set(nextSummaryEntity);
-//   context.FastFactory_ContestTemplateDeleted.set(
-//     fastFactory_ContestTemplateDeletedEntity
-//   );
-// });
-
-// FastFactoryContract.ModuleCloned.loader(({ event, context }) => {
-//   context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
-// });
-
-// FastFactoryContract.ModuleCloned.handler(({ event, context }) => {
-//   const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
-
-//   const currentSummaryEntity: FactoryEventsSummaryEntity =
-//     summary ?? FACTORY_EVENTS_SUMMARY;
-
-//   const nextSummaryEntity = {
-//     ...currentSummaryEntity,
-//     fastFactory_ModuleClonedCount:
-//       currentSummaryEntity.fastFactory_ModuleClonedCount + BigInt(1),
-//   };
-
-//   const fastFactory_ModuleClonedEntity: FastFactory_ModuleClonedEntity = {
-//     id: event.transactionHash + event.logIndex.toString(),
-//     moduleAddress: event.params.moduleAddress,
-//     moduleName: event.params.moduleName,
-//     filterTag: event.params.filterTag,
-//     eventsSummary: FACTORY_EVENTS_SUMMARY_KEY,
-//   };
-
-//   context.FactoryEventsSummary.set(nextSummaryEntity);
-//   context.FastFactory_ModuleCloned.set(fastFactory_ModuleClonedEntity);
-// });
-// FastFactoryContract.ModuleTemplateCreated.loader(({ event, context }) => {
-//   context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
-// });
-
-// FastFactoryContract.ModuleTemplateCreated.handler(({ event, context }) => {
-//   const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
-
-//   const currentSummaryEntity: FactoryEventsSummaryEntity =
-//     summary ?? FACTORY_EVENTS_SUMMARY;
-
-//   const nextSummaryEntity = {
-//     ...currentSummaryEntity,
-//     fastFactory_ModuleTemplateCreatedCount:
-//       currentSummaryEntity.fastFactory_ModuleTemplateCreatedCount + BigInt(1),
-//   };
-
-//   const fastFactory_ModuleTemplateCreatedEntity: FastFactory_ModuleTemplateCreatedEntity =
-//     {
-//       id: event.transactionHash + event.logIndex.toString(),
-//       moduleName: event.params.moduleName,
-//       moduleAddress: event.params.moduleAddress,
-//       moduleInfo_0: event.params.moduleInfo[0],
-//       moduleInfo_1: event.params.moduleInfo[1],
-//       eventsSummary: FACTORY_EVENTS_SUMMARY_KEY,
-//     };
-
-//   context.FactoryEventsSummary.set(nextSummaryEntity);
-//   context.FastFactory_ModuleTemplateCreated.set(
-//     fastFactory_ModuleTemplateCreatedEntity
-//   );
-// });
-// FastFactoryContract.ModuleTemplateDeleted.loader(({ event, context }) => {
-//   context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
-// });
-
-// FastFactoryContract.ModuleTemplateDeleted.handler(({ event, context }) => {
-//   const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
-
-//   const currentSummaryEntity: FactoryEventsSummaryEntity =
-//     summary ?? FACTORY_EVENTS_SUMMARY;
-
-//   const nextSummaryEntity = {
-//     ...currentSummaryEntity,
-//     fastFactory_ModuleTemplateDeletedCount:
-//       currentSummaryEntity.fastFactory_ModuleTemplateDeletedCount + BigInt(1),
-//   };
-
-//   const fastFactory_ModuleTemplateDeletedEntity: FastFactory_ModuleTemplateDeletedEntity =
-//     {
-//       id: event.transactionHash + event.logIndex.toString(),
-//       moduleName: event.params.moduleName,
-//       moduleAddress: event.params.moduleAddress,
-//       eventsSummary: FACTORY_EVENTS_SUMMARY_KEY,
-//     };
-
-//   context.FactoryEventsSummary.set(nextSummaryEntity);
-//   context.FastFactory_ModuleTemplateDeleted.set(
-//     fastFactory_ModuleTemplateDeletedEntity
-//   );
-// });
+FastFactoryContract.ContestBuilt.loader(({ event, context }) => {
+  context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
+  indexContestVersionFactory(event, context);
+});
