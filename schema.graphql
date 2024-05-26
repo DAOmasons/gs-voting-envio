@@ -90,6 +90,7 @@ type ShipChoice {
   choiceData: Bytes!
   active: Boolean!
   voteTally: BigInt!
+  votes: [ShipVote!]! @derivedFrom(field: "choice")
 }
 
 type ShipVote {
