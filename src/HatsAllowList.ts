@@ -1,5 +1,4 @@
 import { HatsAllowListContract } from 'generated';
-import { HatsAllowListContract_Removed_handler } from 'generated/src/Handlers.gen';
 
 HatsAllowListContract.Initialized.loader(() => {});
 

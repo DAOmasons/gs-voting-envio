@@ -126,3 +126,22 @@ Contest_v0_1_0Contract.ContestInitialized.handler(({ event, context }) => {
     });
   }
 });
+
+Contest_v0_1_0Contract.ContestStatusChanged.loader(({ event, context }) => {
+  context.Contest.load(event.srcAddress, undefined);
+});
+
+Contest_v0_1_0Contract.ContestStatusChanged.handler(({ event, context }) => {
+  const contest = context.Contest.get(event.srcAddress);
+  if (contest === undefined) {
+    context.log.error(
+      `GrantShipsVoting not found: Contest address ${event.srcAddress}`
+    );
+    return;
+  }
+
+  context.Contest.set({
+    ...contest,
+    contestStatus: event.params.status,
+  });
+});

@@ -38,4 +38,4 @@ networks:
     handler: src/Contest.ts
     events:
     - event: ContestInitialized(address votesModule, address pointsModule, address choicesModule, address executionModule, bool isContinuous, bool isRetractable, uint8 status)
-
+    - event: ContestStatusChanged(uint8 status)
