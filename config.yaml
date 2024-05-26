@@ -24,7 +24,8 @@ networks:
     events: 
     - event: Initialized(address contest, address hatsAddress, uint256 hatId)
     - event: Registered(bytes32 choiceId, ((uint256, string), bytes, bool))
-    - event: Removed(bytes32)
+    - event: Removed(bytes32 choiceId)
+      isAsync: true
   - name: ERC20VotesPoints
     handler: src/ERC20VotesPoints.ts
     events:

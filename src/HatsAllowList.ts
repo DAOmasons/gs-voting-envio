@@ -1,4 +1,5 @@
 import { HatsAllowListContract } from 'generated';
+import { HatsAllowListContract_Removed_handler } from 'generated/src/Handlers.gen';
 
 HatsAllowListContract.Initialized.loader(() => {});
 
@@ -13,6 +14,7 @@ HatsAllowListContract.Initialized.handler(({ event, context }) => {
 HatsAllowListContract.Registered.loader(({ event, context }) => {
   context.StemModule.load(event.srcAddress, undefined);
 });
+
 HatsAllowListContract.Registered.handler(({ event, context }) => {
   const stemModule = context.StemModule.get(event.srcAddress);
   if (stemModule === undefined) {
@@ -40,5 +42,29 @@ HatsAllowListContract.Registered.handler(({ event, context }) => {
   });
 });
 
-HatsAllowListContract.Removed.loader(() => {});
-HatsAllowListContract.Removed.handler(({ event, context }) => {});
+HatsAllowListContract.Removed.loader(({ event, context }) => {});
+
+HatsAllowListContract.Removed.handlerAsync(async ({ event, context }) => {
+  const stemModule = await context.StemModule.get(event.srcAddress);
+  if (stemModule === undefined) {
+    context.log.error(
+      `StemModule not found: Module address ${event.srcAddress}`
+    );
+    return;
+  }
+  const shipChoice = await context.ShipChoice.get(
+    `choice-${event.params.choiceId}-${stemModule.contestAddress}`
+  );
+
+  if (shipChoice === undefined) {
+    context.log.error(
+      `ShipChoice not found: choice id ${event.params.choiceId}`
+    );
+    return;
+  }
+
+  context.ShipChoice.set({
+    ...shipChoice,
+    active: false,
+  });
+});

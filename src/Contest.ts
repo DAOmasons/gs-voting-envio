@@ -71,26 +71,25 @@ Contest_v0_1_0Contract.ContestInitialized.handler(({ event, context }) => {
   context.StemModule.set({
     ...executionModule,
     contestAddress: contestClone.contestAddress,
+    contest_id: contestClone.contestAddress,
   });
 
   context.StemModule.set({
     ...votingModule,
     contestAddress: contestClone.contestAddress,
+    contest_id: contestClone.contestAddress,
   });
 
   context.StemModule.set({
     ...pointsModule,
     contestAddress: contestClone.contestAddress,
+    contest_id: contestClone.contestAddress,
   });
 
   context.StemModule.set({
     ...choicesModule,
     contestAddress: contestClone.contestAddress,
-  });
-
-  context.LocalLog.set({
-    id: event.srcAddress,
-    message: contestClone.contestAddress,
+    contest_id: contestClone.contestAddress,
   });
 
   context.Contest.set({

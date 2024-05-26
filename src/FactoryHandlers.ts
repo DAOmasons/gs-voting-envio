@@ -32,6 +32,7 @@ FastFactoryContract.FactoryInitialized.loader(({ context }) => {
 });
 
 FastFactoryContract.FactoryInitialized.handler(({ event, context }) => {
+  context.log.info('Logger online');
   const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
 
   const admin = event.params.admin;
@@ -252,6 +253,7 @@ FastFactoryContract.ModuleCloned.handler(({ event, context }) => {
     filterTag: event.params.filterTag,
     moduleTemplate_id: event.params.moduleName,
     contestAddress: undefined,
+    contest_id: undefined,
   });
   context.FactoryEventsSummary.set(nextSummaryEntity);
 });

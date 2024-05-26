@@ -31,6 +31,7 @@ type StemModule {
   id: ID!
   moduleAddress: String!
   contestAddress: String
+  contest: Contest
   moduleName: String!
   moduleTemplate: ModuleTemplate!
   filterTag: String!
