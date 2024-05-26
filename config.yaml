@@ -34,6 +34,12 @@ networks:
     handler: src/TimedVotes.ts
     events:
     - event: Initialized(address contest, uint256 duration)
+    - event: VotingStarted(uint256 startTime, uint256 endTime)
+      isAsync: true
+    - event: VoteCast(address indexed voter, bytes32 choiceId, uint256 amount, (uint256, string))
+      isAsync: true
+    - event: VoteRetracted(address indexed voter, bytes32 choiceId, uint256 amount, (uint256, string))
+      isAsync: true
   - name: Contest_v0_1_0
     handler: src/Contest.ts
     events:

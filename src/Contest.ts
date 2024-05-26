@@ -123,6 +123,9 @@ Contest_v0_1_0Contract.ContestInitialized.handler(({ event, context }) => {
       voteTokenAddress: ercPointParams.voteTokenAddress,
       votingCheckpoint: ercPointParams.votingCheckpoint,
       voteDuration: tvParams.voteDuration,
+      startTime: undefined,
+      endTime: undefined,
+      totalVotes: 0n,
     });
   }
 });

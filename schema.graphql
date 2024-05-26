@@ -89,6 +89,17 @@ type ShipChoice {
   mdPointer: String!
   choiceData: Bytes!
   active: Boolean!
+  voteTally: BigInt!
+}
+
+type ShipVote {
+  id: ID!
+  choice: ShipChoice!
+  voter: String!
+  amount: BigInt!
+  contest: GrantShipsVoting!
+  mdPointer: String!
+  mdProtocol: BigInt!
 }
 
 type GrantShipsVoting {
@@ -99,5 +110,9 @@ type GrantShipsVoting {
   voteTokenAddress: String!
   votingCheckpoint: BigInt!
   voteDuration: BigInt!
+  startTime: BigInt
+  endTime: BigInt
+  totalVotes: BigInt!
   choices: [ShipChoice!]! @derivedFrom(field: "contest")
+  votes: [ShipVote!]! @derivedFrom(field: "contest")
 }

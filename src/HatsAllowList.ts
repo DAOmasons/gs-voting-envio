@@ -38,10 +38,11 @@ HatsAllowListContract.Registered.handler(({ event, context }) => {
     mdPointer: event.params._1[0][1],
     choiceData: event.params._1[1],
     active: event.params._1[2],
+    voteTally: BigInt(0),
   });
 });
 
-HatsAllowListContract.Removed.loader(({ event, context }) => {});
+HatsAllowListContract.Removed.loader(() => {});
 
 HatsAllowListContract.Removed.handlerAsync(async ({ event, context }) => {
   const stemModule = await context.StemModule.get(event.srcAddress);
