@@ -8,6 +8,7 @@ import {
   indexContestVersionFactory,
   indexerModuleFactory,
 } from './utils/dynamicIndexing';
+import { addTransaction } from './utils/sync';
 
 export const FACTORY_EVENTS_SUMMARY_KEY = 'GlobalEventsSummary';
 const FACTORY_ADDRESS = '0x3a190e45f300cbb8AB1153a90b23EE3333b02D9d';
@@ -68,6 +69,7 @@ FastFactoryContract.AdminAdded.handler(({ event, context }) => {
   };
 
   context.FactoryEventsSummary.set(nextSummaryEntity);
+  addTransaction(event, context.Transaction.set);
 });
 
 /// ===============================
@@ -94,6 +96,7 @@ FastFactoryContract.AdminRemoved.handler(({ event, context }) => {
   };
 
   context.FactoryEventsSummary.set(nextSummaryEntity);
+  addTransaction(event, context.Transaction.set);
 });
 
 /// ===============================
@@ -126,6 +129,7 @@ FastFactoryContract.ContestTemplateCreated.handler(({ event, context }) => {
 
   context.FactoryEventsSummary.set(nextSummaryEntity);
   context.ContestTemplate.set(contestTemplate);
+  addTransaction(event, context.Transaction.set);
 });
 
 /// ===============================
@@ -163,6 +167,7 @@ FastFactoryContract.ContestTemplateDeleted.handler(({ event, context }) => {
 
   context.FactoryEventsSummary.set(nextSummaryEntity);
   context.ContestTemplate.set(deletedContestTemplate);
+  addTransaction(event, context.Transaction.set);
 });
 
 /// ===============================
@@ -193,6 +198,7 @@ FastFactoryContract.ModuleTemplateCreated.handler(({ event, context }) => {
     mdPointer: event.params.moduleInfo[1],
     active: true,
   });
+  addTransaction(event, context.Transaction.set);
 });
 
 /// ===============================
@@ -228,6 +234,7 @@ FastFactoryContract.ModuleTemplateDeleted.handler(({ event, context }) => {
     ...module,
     active: false,
   });
+  addTransaction(event, context.Transaction.set);
 });
 
 FastFactoryContract.ModuleCloned.loader(({ event, context }) => {
@@ -256,6 +263,7 @@ FastFactoryContract.ModuleCloned.handler(({ event, context }) => {
     contest_id: undefined,
   });
   context.FactoryEventsSummary.set(nextSummaryEntity);
+  addTransaction(event, context.Transaction.set);
 });
 
 /// ===============================
@@ -285,6 +293,7 @@ FastFactoryContract.ContestCloned.handler(({ event, context }) => {
     contestVersion: event.params.contestVersion,
     filterTag: event.params.filterTag,
   });
+  addTransaction(event, context.Transaction.set);
 });
 
 /// ===============================
@@ -307,4 +316,5 @@ FastFactoryContract.ContestBuilt.handler(({ event, context }) => {
   };
 
   context.FactoryEventsSummary.set(nextSummaryEntity);
+  addTransaction(event, context.Transaction.set);
 });

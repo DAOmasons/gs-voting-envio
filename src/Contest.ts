@@ -1,5 +1,6 @@
 import { Contest_v0_1_0Contract } from 'generated';
 import { isGrantShipsVoting } from './utils/dynamicIndexing';
+import { addTransaction } from './utils/sync';
 
 Contest_v0_1_0Contract.ContestInitialized.loader(({ event, context }) => {
   context.ContestClone.load(event.srcAddress);
@@ -128,6 +129,7 @@ Contest_v0_1_0Contract.ContestInitialized.handler(({ event, context }) => {
       totalVotes: 0n,
     });
   }
+  addTransaction(event, context.Transaction.set);
 });
 
 Contest_v0_1_0Contract.ContestStatusChanged.loader(({ event, context }) => {
@@ -147,4 +149,5 @@ Contest_v0_1_0Contract.ContestStatusChanged.handler(({ event, context }) => {
     ...contest,
     contestStatus: event.params.status,
   });
+  addTransaction(event, context.Transaction.set);
 });

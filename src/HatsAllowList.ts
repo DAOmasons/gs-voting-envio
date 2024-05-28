@@ -1,5 +1,6 @@
 import { HatsAllowListContract } from 'generated';
 import { createChoiceId } from './utils/id';
+import { addTransaction } from './utils/sync';
 
 HatsAllowListContract.Initialized.loader(() => {});
 
@@ -9,6 +10,7 @@ HatsAllowListContract.Initialized.handler(({ event, context }) => {
     hatId: event.params.hatId,
     hatsAddress: event.params.hatsAddress,
   });
+  addTransaction(event, context.Transaction.set);
 });
 
 HatsAllowListContract.Registered.loader(({ event, context }) => {
@@ -44,6 +46,7 @@ HatsAllowListContract.Registered.handler(({ event, context }) => {
     active: event.params._1[2],
     voteTally: BigInt(0),
   });
+  addTransaction(event, context.Transaction.set);
 });
 
 HatsAllowListContract.Removed.loader(() => {});
@@ -82,4 +85,5 @@ HatsAllowListContract.Removed.handlerAsync(async ({ event, context }) => {
     ...shipChoice,
     active: false,
   });
+  addTransaction(event, context.Transaction.set);
 });
