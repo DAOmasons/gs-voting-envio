@@ -1,4 +1,5 @@
 import { TimedVotesContract } from 'generated';
+import { createChoiceId, createVoteId } from './utils/id';
 
 TimedVotesContract.Initialized.loader(() => {});
 
@@ -72,7 +73,10 @@ TimedVotesContract.VoteCast.handlerAsync(async ({ event, context }) => {
   }
 
   const choice = await context.ShipChoice.get(
-    `choice-${event.params.choiceId}-${gsVoting.id}`
+    createChoiceId({
+      choiceId: event.params.choiceId,
+      contestAddress: gsVoting.id,
+    })
   );
 
   if (choice === undefined) {
@@ -80,7 +84,7 @@ TimedVotesContract.VoteCast.handlerAsync(async ({ event, context }) => {
     return;
   }
 
-  const voteId = `vote-${event.transactionHash}-${event.logIndex}`;
+  const voteId = createVoteId(event);
 
   context.ShipVote.set({
     id: voteId,
@@ -133,7 +137,10 @@ TimedVotesContract.VoteRetracted.handlerAsync(async ({ event, context }) => {
   }
 
   const choice = await context.ShipChoice.get(
-    `choice-${event.params.choiceId}-${gsVoting.id}`
+    createChoiceId({
+      choiceId: event.params.choiceId,
+      contestAddress: gsVoting.id,
+    })
   );
 
   if (choice === undefined) {
@@ -141,7 +148,7 @@ TimedVotesContract.VoteRetracted.handlerAsync(async ({ event, context }) => {
     return;
   }
 
-  const voteId = `vote-${event.transactionHash}-${event.logIndex}`;
+  const voteId = createVoteId(event);
 
   const vote = await context.ShipVote.get(voteId);
 

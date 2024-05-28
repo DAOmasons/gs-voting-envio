@@ -1,4 +1,5 @@
 import { HatsAllowListContract } from 'generated';
+import { createChoiceId } from './utils/id';
 
 HatsAllowListContract.Initialized.loader(() => {});
 
@@ -29,7 +30,10 @@ HatsAllowListContract.Registered.handler(({ event, context }) => {
     return;
   }
 
-  const choiceId = `choice-${event.params.choiceId}-${stemModule.contestAddress}`;
+  const choiceId = createChoiceId({
+    choiceId: event.params.choiceId,
+    contestAddress: stemModule.contestAddress,
+  });
 
   context.ShipChoice.set({
     id: choiceId,
@@ -52,8 +56,19 @@ HatsAllowListContract.Removed.handlerAsync(async ({ event, context }) => {
     );
     return;
   }
+
+  if (stemModule.contestAddress === undefined) {
+    context.log.error(
+      `StemModule contestAddress not found: contest address ${stemModule.contestAddress}`
+    );
+    return;
+  }
+
   const shipChoice = await context.ShipChoice.get(
-    `choice-${event.params.choiceId}-${stemModule.contestAddress}`
+    createChoiceId({
+      choiceId: event.params.choiceId,
+      contestAddress: stemModule.contestAddress,
+    })
   );
 
   if (shipChoice === undefined) {

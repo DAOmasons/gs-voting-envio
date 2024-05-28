@@ -118,3 +118,11 @@ type GrantShipsVoting {
   choices: [ShipChoice!]! @derivedFrom(field: "contest")
   votes: [ShipVote!]! @derivedFrom(field: "contest")
 }
+
+type Transaction {
+  id: ID!
+  blockNumber: BigInt!
+  srcAddress: String!
+  txOrigin: String
+  txHash: Bytes!
+}
