@@ -126,3 +126,30 @@ type Transaction {
   txOrigin: String
   txHash: Bytes!
 }
+
+type Record {
+  id: ID!
+  tag: String!
+  nonce: Bytes!
+  hatId: BigInt!
+  mdProtocol: BigInt!
+  mdPointer: String!
+  hatsPoster: HatsPoster!
+}
+
+type EventPost {
+  id: ID!
+  tag: String!
+  hatId: BigInt!
+  mdProtocol: BigInt!
+  mdPointer: String!
+  hatsPoster: HatsPoster!
+}
+
+type HatsPoster {
+  id: ID!
+  hatIds: [BigInt!]!
+  hatsAddress: String!
+  record: [Record!]! @derivedFrom(field: "hatsPoster")
+  eventPosts: [EventPost!]! @derivedFrom(field: "hatsPoster")
+}

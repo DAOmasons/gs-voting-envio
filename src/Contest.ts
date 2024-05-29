@@ -107,6 +107,12 @@ Contest_v0_1_0Contract.ContestInitialized.handler(({ event, context }) => {
     isRetractable: event.params.isRetractable,
   });
 
+  console.log('choicesModule.moduleName', choicesModule.moduleName);
+  console.log('votingModule.moduleName', votingModule.moduleName);
+  console.log('pointsModule.moduleName', pointsModule.moduleName);
+  console.log('executionModule.moduleName', executionModule.moduleName);
+  console.log('contestClone.contestVersion', contestClone.contestVersion);
+
   if (
     isGrantShipsVoting({
       choiceModuleName: choicesModule.moduleName,
@@ -116,6 +122,7 @@ Contest_v0_1_0Contract.ContestInitialized.handler(({ event, context }) => {
       contestVersion: contestClone.contestVersion,
     })
   ) {
+    context.log.info(`ContestInitialized: ${event.srcAddress}`);
     context.GrantShipsVoting.set({
       id: event.srcAddress,
       contest_id: contestClone.contestAddress,

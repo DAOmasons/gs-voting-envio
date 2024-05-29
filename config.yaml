@@ -1,5 +1,11 @@
 name: gs-voting
 contracts:
+- name: HatsPoster
+  handler: src/HatsPoster.ts
+  events:
+  - event: Initialized(address hatsAddress, uint256[] hatIds)
+  - event: PostRecord(string tag, bytes32 nonce, uint256 hatId, (uint256, string))
+  - event: PostEvent(string tag, uint256 hatId, (uint256, string))
 - name: FastFactory
   handler: src/FactoryHandlers.ts
   events:
@@ -45,7 +51,7 @@ networks:
   end_block: null
   contracts:
     - name: FastFactory
-      address: 0x3a190e45f300cbb8AB1153a90b23EE3333b02D9d
+      address: 0x2bABC10b90c67399F820433358fEb85fbB24f22f
     - name: HatsAllowList
       address: 
     - name: ERC20VotesPoints
@@ -54,6 +60,8 @@ networks:
       address:
     - name: Contest_v0_1_0
       address:  
+    - name: HatsPoster
+      address: 0x2c30E8923B7cB0D91c2E7Ed24a420DC032E156d0
 - id: 42161 # Arbitrum One
   start_block: 215395477
   end_block: null
@@ -68,3 +76,5 @@ networks:
       address:
     - name: Contest_v0_1_0
       address:  
+    - name: HatsPoster
+      address: 0x363a6eFF03cdAbD5Cf4921d9A85eAf7dFd2A7efD
