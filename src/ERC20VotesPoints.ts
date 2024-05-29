@@ -9,5 +9,5 @@ ERC20VotesPointsContract.Initialized.handler(({ event, context }) => {
     voteTokenAddress: event.params.token,
     votingCheckpoint: event.params.votingCheckpoint,
   });
-  addTransaction(event, context.Transaction.set);
+  addTransaction(event, context.EnvioTX.set);
 });

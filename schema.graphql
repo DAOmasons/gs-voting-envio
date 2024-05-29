@@ -119,7 +119,7 @@ type GrantShipsVoting {
   votes: [ShipVote!]! @derivedFrom(field: "contest")
 }
 
-type Transaction {
+type EnvioTX {
   id: ID!
   blockNumber: BigInt!
   srcAddress: String!

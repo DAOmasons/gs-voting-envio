@@ -61,7 +61,7 @@ networks:
     - name: Contest_v0_1_0
       address:  
     - name: HatsPoster
-      address: 0x2c30E8923B7cB0D91c2E7Ed24a420DC032E156d0
+      address: 0x4F0dc1C7d91d914d921F3C9C188F4454AE260317
 - id: 42161 # Arbitrum One
   start_block: 215395477
   end_block: null

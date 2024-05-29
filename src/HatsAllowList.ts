@@ -10,7 +10,7 @@ HatsAllowListContract.Initialized.handler(({ event, context }) => {
     hatId: event.params.hatId,
     hatsAddress: event.params.hatsAddress,
   });
-  addTransaction(event, context.Transaction.set);
+  addTransaction(event, context.EnvioTX.set);
 });
 
 HatsAllowListContract.Registered.loader(({ event, context }) => {
@@ -46,7 +46,7 @@ HatsAllowListContract.Registered.handler(({ event, context }) => {
     active: event.params._1[2],
     voteTally: BigInt(0),
   });
-  addTransaction(event, context.Transaction.set);
+  addTransaction(event, context.EnvioTX.set);
 });
 
 HatsAllowListContract.Removed.loader(() => {});
@@ -85,5 +85,5 @@ HatsAllowListContract.Removed.handlerAsync(async ({ event, context }) => {
     ...shipChoice,
     active: false,
   });
-  addTransaction(event, context.Transaction.set);
+  addTransaction(event, context.EnvioTX.set);
 });

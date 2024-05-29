@@ -10,7 +10,7 @@ HatsPosterContract.Initialized.handler(({ event, context }) => {
     hatsAddress: event.params.hatsAddress,
   });
 
-  addTransaction(event, context.Transaction.set);
+  addTransaction(event, context.EnvioTX.set);
 });
 
 HatsPosterContract.PostEvent.loader(({ event, context }) => {
@@ -35,7 +35,7 @@ HatsPosterContract.PostEvent.handler(({ event, context }) => {
     mdPointer: event.params._2[1],
   });
 
-  addTransaction(event, context.Transaction.set);
+  addTransaction(event, context.EnvioTX.set);
 });
 
 HatsPosterContract.PostRecord.loader(({ event, context }) => {
@@ -61,5 +61,5 @@ HatsPosterContract.PostRecord.handler(({ event, context }) => {
     mdPointer: event.params._3[1],
   });
 
-  addTransaction(event, context.Transaction.set);
+  addTransaction(event, context.EnvioTX.set);
 });

@@ -1,8 +1,8 @@
-import { eventLog, transactionEntity } from 'generated';
+import { eventLog, envioTXEntity } from 'generated';
 
 export const addTransaction = (
   event: eventLog<unknown>,
-  set: (_1: transactionEntity) => void
+  set: (_1: envioTXEntity) => void
 ) => {
   set({
     id: event.transactionHash,

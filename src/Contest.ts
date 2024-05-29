@@ -107,12 +107,6 @@ Contest_v0_1_0Contract.ContestInitialized.handler(({ event, context }) => {
     isRetractable: event.params.isRetractable,
   });
 
-  console.log('choicesModule.moduleName', choicesModule.moduleName);
-  console.log('votingModule.moduleName', votingModule.moduleName);
-  console.log('pointsModule.moduleName', pointsModule.moduleName);
-  console.log('executionModule.moduleName', executionModule.moduleName);
-  console.log('contestClone.contestVersion', contestClone.contestVersion);
-
   if (
     isGrantShipsVoting({
       choiceModuleName: choicesModule.moduleName,
@@ -122,7 +116,6 @@ Contest_v0_1_0Contract.ContestInitialized.handler(({ event, context }) => {
       contestVersion: contestClone.contestVersion,
     })
   ) {
-    context.log.info(`ContestInitialized: ${event.srcAddress}`);
     context.GrantShipsVoting.set({
       id: event.srcAddress,
       contest_id: contestClone.contestAddress,
@@ -136,7 +129,7 @@ Contest_v0_1_0Contract.ContestInitialized.handler(({ event, context }) => {
       totalVotes: 0n,
     });
   }
-  addTransaction(event, context.Transaction.set);
+  addTransaction(event, context.EnvioTX.set);
 });
 
 Contest_v0_1_0Contract.ContestStatusChanged.loader(({ event, context }) => {
@@ -156,5 +149,5 @@ Contest_v0_1_0Contract.ContestStatusChanged.handler(({ event, context }) => {
     ...contest,
     contestStatus: event.params.status,
   });
-  addTransaction(event, context.Transaction.set);
+  addTransaction(event, context.EnvioTX.set);
 });
