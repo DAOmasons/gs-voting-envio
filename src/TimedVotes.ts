@@ -44,6 +44,7 @@ TimedVotesContract.VotingStarted.handlerAsync(async ({ event, context }) => {
     ...gsVoting,
     startTime: event.params.startTime,
     endTime: event.params.endTime,
+    isVotingActive: true,
   });
   addTransaction(event, context.EnvioTX.set);
 });

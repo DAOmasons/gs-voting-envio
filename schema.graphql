@@ -114,6 +114,7 @@ type GrantShipsVoting {
   voteDuration: BigInt!
   startTime: BigInt
   endTime: BigInt
+  isVotingActive: Boolean!
   totalVotes: BigInt!
   choices: [ShipChoice!]! @derivedFrom(field: "contest")
   votes: [ShipVote!]! @derivedFrom(field: "contest")
