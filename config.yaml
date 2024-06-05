@@ -1,47 +1,80 @@
 name: gs-voting
+contracts:
+- name: HatsPoster
+  handler: src/HatsPoster.ts
+  events:
+  - event: Initialized(address hatsAddress, uint256[] hatIds)
+  - event: PostRecord(string tag, bytes32 nonce, uint256 hatId, (uint256, string))
+  - event: PostEvent(string tag, uint256 hatId, (uint256, string))
+- name: FastFactory
+  handler: src/FactoryHandlers.ts
+  events:
+  - event: FactoryInitialized(address admin)
+  - event: AdminAdded(address admin)
+  - event: AdminRemoved(address admin)
+  - event: ContestTemplateCreated(string contestVersion, address contestAddress, (uint256,string) contestInfo)
+  - event: ContestTemplateDeleted(string contestVersion, address contestAddress)
+  - event: ModuleTemplateCreated(string moduleName, address moduleAddress, (uint256,string) moduleInfo)
+  - event: ModuleTemplateDeleted(string moduleName, address moduleAddress)
+  - event: ModuleCloned(address moduleAddress, string moduleName, string filterTag)
+  - event: ContestCloned(address contestAddress, string contestVersion, string filterTag)
+  - event: ContestBuilt(string votesModule, string pointsModule, string choicesModule, string executionModule, address contestAddress, string contestVersion, string filterTag)
+- name: HatsAllowList
+  handler: src/HatsAllowList.ts
+  events: 
+  - event: Initialized(address contest, address hatsAddress, uint256 hatId)
+  - event: Registered(bytes32 choiceId, ((uint256, string), bytes, bool), address contest)
+  - event: Removed(bytes32 choiceId, address contest)
+    isAsync: true
+- name: ERC20VotesPoints
+  handler: src/ERC20VotesPoints.ts
+  events:
+  - event: Initialized(address contest, address token, uint256 votingCheckpoint)
+- name: TimedVotes
+  handler: src/TimedVotes.ts
+  events:
+  - event: Initialized(address contest, uint256 duration)
+  - event: VotingStarted(uint256 startTime, uint256 endTime)
+    isAsync: true
+  - event: VoteCast(address indexed voter, bytes32 choiceId, uint256 amount, (uint256, string))
+    isAsync: true
+  - event: VoteRetracted(address indexed voter, bytes32 choiceId, uint256 amount, (uint256, string))
+    isAsync: true
+- name: Contest_v0_1_0
+  handler: src/Contest.ts
+  events:
+  - event: ContestInitialized(address votesModule, address pointsModule, address choicesModule, address executionModule, bool isContinuous, bool isRetractable, uint8 status)
+  - event: ContestStatusChanged(uint8 status)
 networks:
-- id: 421614
-  start_block: 0
+- id: 421614 # Arbitrum Sepolia
+  start_block: 47672386
   end_block: null
   contracts:
-  - name: FastFactory
-    address:
-    - 0x3a190e45f300cbb8AB1153a90b23EE3333b02D9d
-    handler: src/FactoryHandlers.ts
-    events:
-    - event: FactoryInitialized(address admin)
-    - event: AdminAdded(address admin)
-    - event: AdminRemoved(address admin)
-    - event: ContestTemplateCreated(string contestVersion, address contestAddress, (uint256,string) contestInfo)
-    - event: ContestTemplateDeleted(string contestVersion, address contestAddress)
-    - event: ModuleTemplateCreated(string moduleName, address moduleAddress, (uint256,string) moduleInfo)
-    - event: ModuleTemplateDeleted(string moduleName, address moduleAddress)
-    - event: ModuleCloned(address moduleAddress, string moduleName, string filterTag)
-    - event: ContestCloned(address contestAddress, string contestVersion, string filterTag)
-    - event: ContestBuilt(string votesModule, string pointsModule, string choicesModule, string executionModule, address contestAddress, string contestVersion, string filterTag)
-  - name: HatsAllowList
-    handler: src/HatsAllowList.ts
-    events: 
-    - event: Initialized(address contest, address hatsAddress, uint256 hatId)
-    - event: Registered(bytes32 choiceId, ((uint256, string), bytes, bool))
-    - event: Removed(bytes32 choiceId)
-      isAsync: true
-  - name: ERC20VotesPoints
-    handler: src/ERC20VotesPoints.ts
-    events:
-    - event: Initialized(address contest, address token, uint256 votingCheckpoint)
-  - name: TimedVotes
-    handler: src/TimedVotes.ts
-    events:
-    - event: Initialized(address contest, uint256 duration)
-    - event: VotingStarted(uint256 startTime, uint256 endTime)
-      isAsync: true
-    - event: VoteCast(address indexed voter, bytes32 choiceId, uint256 amount, (uint256, string))
-      isAsync: true
-    - event: VoteRetracted(address indexed voter, bytes32 choiceId, uint256 amount, (uint256, string))
-      isAsync: true
-  - name: Contest_v0_1_0
-    handler: src/Contest.ts
-    events:
-    - event: ContestInitialized(address votesModule, address pointsModule, address choicesModule, address executionModule, bool isContinuous, bool isRetractable, uint8 status)
-    - event: ContestStatusChanged(uint8 status)
+    - name: FastFactory
+      address: 0x2bABC10b90c67399F820433358fEb85fbB24f22f
+    - name: HatsAllowList
+      address: 
+    - name: ERC20VotesPoints
+      address:
+    - name: TimedVotes
+      address:
+    - name: Contest_v0_1_0
+      address:  
+    - name: HatsPoster
+      address: 0x4F0dc1C7d91d914d921F3C9C188F4454AE260317
+- id: 42161 # Arbitrum One
+  start_block: 215395477
+  end_block: null
+  contracts:
+    - name: FastFactory
+      address: 0x98917Fe3554acFB9f982F6A4fE5Ad377EE55ee70
+    - name: HatsAllowList
+      address: 
+    - name: ERC20VotesPoints
+      address:
+    - name: TimedVotes
+      address:
+    - name: Contest_v0_1_0
+      address:  
+    - name: HatsPoster
+      address: 0x363a6eFF03cdAbD5Cf4921d9A85eAf7dFd2A7efD

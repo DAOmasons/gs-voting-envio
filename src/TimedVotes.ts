@@ -1,4 +1,6 @@
 import { TimedVotesContract } from 'generated';
+import { createChoiceId, createVoteId } from './utils/id';
+import { addTransaction } from './utils/sync';
 
 TimedVotesContract.Initialized.loader(() => {});
 
@@ -7,6 +9,8 @@ TimedVotesContract.Initialized.handler(({ event, context }) => {
     id: event.srcAddress,
     voteDuration: event.params.duration,
   });
+
+  addTransaction(event, context.EnvioTX.set);
 });
 
 TimedVotesContract.VotingStarted.loader(() => {});
@@ -40,7 +44,9 @@ TimedVotesContract.VotingStarted.handlerAsync(async ({ event, context }) => {
     ...gsVoting,
     startTime: event.params.startTime,
     endTime: event.params.endTime,
+    isVotingActive: true,
   });
+  addTransaction(event, context.EnvioTX.set);
 });
 
 TimedVotesContract.VoteCast.loader(() => {});
@@ -72,7 +78,10 @@ TimedVotesContract.VoteCast.handlerAsync(async ({ event, context }) => {
   }
 
   const choice = await context.ShipChoice.get(
-    `choice-${event.params.choiceId}-${gsVoting.id}`
+    createChoiceId({
+      choiceId: event.params.choiceId,
+      contestAddress: gsVoting.id,
+    })
   );
 
   if (choice === undefined) {
@@ -80,7 +89,7 @@ TimedVotesContract.VoteCast.handlerAsync(async ({ event, context }) => {
     return;
   }
 
-  const voteId = `vote-${event.transactionHash}-${event.logIndex}`;
+  const voteId = createVoteId(event);
 
   context.ShipVote.set({
     id: voteId,
@@ -102,6 +111,7 @@ TimedVotesContract.VoteCast.handlerAsync(async ({ event, context }) => {
     ...gsVoting,
     totalVotes: gsVoting.totalVotes + 1n,
   });
+  addTransaction(event, context.EnvioTX.set);
 });
 
 TimedVotesContract.VoteRetracted.loader(() => {});
@@ -133,7 +143,10 @@ TimedVotesContract.VoteRetracted.handlerAsync(async ({ event, context }) => {
   }
 
   const choice = await context.ShipChoice.get(
-    `choice-${event.params.choiceId}-${gsVoting.id}`
+    createChoiceId({
+      choiceId: event.params.choiceId,
+      contestAddress: gsVoting.id,
+    })
   );
 
   if (choice === undefined) {
@@ -141,7 +154,7 @@ TimedVotesContract.VoteRetracted.handlerAsync(async ({ event, context }) => {
     return;
   }
 
-  const voteId = `vote-${event.transactionHash}-${event.logIndex}`;
+  const voteId = createVoteId(event);
 
   const vote = await context.ShipVote.get(voteId);
 
@@ -170,4 +183,5 @@ TimedVotesContract.VoteRetracted.handlerAsync(async ({ event, context }) => {
     ...gsVoting,
     totalVotes: gsVoting.totalVotes - 1n,
   });
+  addTransaction(event, context.EnvioTX.set);
 });

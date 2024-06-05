@@ -1,4 +1,6 @@
 import { HatsAllowListContract } from 'generated';
+import { createChoiceId } from './utils/id';
+import { addTransaction } from './utils/sync';
 
 HatsAllowListContract.Initialized.loader(() => {});
 
@@ -8,6 +10,7 @@ HatsAllowListContract.Initialized.handler(({ event, context }) => {
     hatId: event.params.hatId,
     hatsAddress: event.params.hatsAddress,
   });
+  addTransaction(event, context.EnvioTX.set);
 });
 
 HatsAllowListContract.Registered.loader(({ event, context }) => {
@@ -29,7 +32,10 @@ HatsAllowListContract.Registered.handler(({ event, context }) => {
     return;
   }
 
-  const choiceId = `choice-${event.params.choiceId}-${stemModule.contestAddress}`;
+  const choiceId = createChoiceId({
+    choiceId: event.params.choiceId,
+    contestAddress: stemModule.contestAddress,
+  });
 
   context.ShipChoice.set({
     id: choiceId,
@@ -40,6 +46,7 @@ HatsAllowListContract.Registered.handler(({ event, context }) => {
     active: event.params._1[2],
     voteTally: BigInt(0),
   });
+  addTransaction(event, context.EnvioTX.set);
 });
 
 HatsAllowListContract.Removed.loader(() => {});
@@ -52,8 +59,19 @@ HatsAllowListContract.Removed.handlerAsync(async ({ event, context }) => {
     );
     return;
   }
+
+  if (stemModule.contestAddress === undefined) {
+    context.log.error(
+      `StemModule contestAddress not found: contest address ${stemModule.contestAddress}`
+    );
+    return;
+  }
+
   const shipChoice = await context.ShipChoice.get(
-    `choice-${event.params.choiceId}-${stemModule.contestAddress}`
+    createChoiceId({
+      choiceId: event.params.choiceId,
+      contestAddress: stemModule.contestAddress,
+    })
   );
 
   if (shipChoice === undefined) {
@@ -67,4 +85,5 @@ HatsAllowListContract.Removed.handlerAsync(async ({ event, context }) => {
     ...shipChoice,
     active: false,
   });
+  addTransaction(event, context.EnvioTX.set);
 });

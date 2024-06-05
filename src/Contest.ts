@@ -1,5 +1,7 @@
-import { Contest_v0_1_0Contract } from 'generated';
+import { Contest_v0_1_0Contract, GrantShipsVotingEntity } from 'generated';
 import { isGrantShipsVoting } from './utils/dynamicIndexing';
+import { addTransaction } from './utils/sync';
+import { ContestStatus } from './utils/constants';
 
 Contest_v0_1_0Contract.ContestInitialized.loader(({ event, context }) => {
   context.ContestClone.load(event.srcAddress);
@@ -125,17 +127,21 @@ Contest_v0_1_0Contract.ContestInitialized.handler(({ event, context }) => {
       voteDuration: tvParams.voteDuration,
       startTime: undefined,
       endTime: undefined,
+      isVotingActive: false,
       totalVotes: 0n,
     });
   }
+  addTransaction(event, context.EnvioTX.set);
 });
 
 Contest_v0_1_0Contract.ContestStatusChanged.loader(({ event, context }) => {
   context.Contest.load(event.srcAddress, undefined);
+  context.GrantShipsVoting.load(event.srcAddress, undefined);
 });
 
 Contest_v0_1_0Contract.ContestStatusChanged.handler(({ event, context }) => {
   const contest = context.Contest.get(event.srcAddress);
+  const grantShipsVoting = context.GrantShipsVoting.get(event.srcAddress);
   if (contest === undefined) {
     context.log.error(
       `GrantShipsVoting not found: Contest address ${event.srcAddress}`
@@ -147,4 +153,20 @@ Contest_v0_1_0Contract.ContestStatusChanged.handler(({ event, context }) => {
     ...contest,
     contestStatus: event.params.status,
   });
+
+  if (Number(event.params.status) === ContestStatus.Finalized) {
+    if (grantShipsVoting === undefined) {
+      context.log.error(
+        `GrantShipsVoting not found: Contest address ${event.srcAddress}`
+      );
+      return;
+    }
+
+    context.GrantShipsVoting.set({
+      ...grantShipsVoting,
+      isVotingActive: false,
+    });
+  }
+
+  addTransaction(event, context.EnvioTX.set);
 });

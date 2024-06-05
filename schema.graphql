@@ -114,7 +114,43 @@ type GrantShipsVoting {
   voteDuration: BigInt!
   startTime: BigInt
   endTime: BigInt
+  isVotingActive: Boolean!
   totalVotes: BigInt!
   choices: [ShipChoice!]! @derivedFrom(field: "contest")
   votes: [ShipVote!]! @derivedFrom(field: "contest")
+}
+
+type EnvioTX {
+  id: ID!
+  blockNumber: BigInt!
+  srcAddress: String!
+  txOrigin: String
+  txHash: Bytes!
+}
+
+type Record {
+  id: ID!
+  tag: String!
+  nonce: Bytes!
+  hatId: BigInt!
+  mdProtocol: BigInt!
+  mdPointer: String!
+  hatsPoster: HatsPoster!
+}
+
+type EventPost {
+  id: ID!
+  tag: String!
+  hatId: BigInt!
+  mdProtocol: BigInt!
+  mdPointer: String!
+  hatsPoster: HatsPoster!
+}
+
+type HatsPoster {
+  id: ID!
+  hatIds: [BigInt!]!
+  hatsAddress: String!
+  record: [Record!]! @derivedFrom(field: "hatsPoster")
+  eventPosts: [EventPost!]! @derivedFrom(field: "hatsPoster")
 }
