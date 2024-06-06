@@ -96,12 +96,18 @@ type ShipChoice {
 type ShipVote {
   id: ID!
   choice: ShipChoice!
-  voter: String!
+  voter: GSVoter!
   amount: BigInt!
   contest: GrantShipsVoting!
   mdPointer: String!
   mdProtocol: BigInt!
-  isRectractVote: Boolean!
+  isRetractVote: Boolean!
+}
+
+type GSVoter {
+  id: ID!
+  address: String!
+  votes: [ShipVote!]! @derivedFrom(field: "voter")
 }
 
 type GrantShipsVoting {
