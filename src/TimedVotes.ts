@@ -94,12 +94,16 @@ TimedVotesContract.VoteCast.handlerAsync(async ({ event, context }) => {
   context.ShipVote.set({
     id: voteId,
     choice_id: choice.id,
-    voter: event.params.voter,
+    voter_id: event.params.voter,
     amount: event.params.amount,
     contest_id: gsVoting.id,
     mdProtocol: event.params._3[0],
     mdPointer: event.params._3[1],
-    isRectractVote: false,
+    isRetractVote: false,
+  });
+  context.GSVoter.set({
+    id: event.params.voter,
+    address: event.params.voter,
   });
 
   context.ShipChoice.set({
@@ -166,12 +170,12 @@ TimedVotesContract.VoteRetracted.handlerAsync(async ({ event, context }) => {
   context.ShipVote.set({
     id: voteId,
     choice_id: choice.id,
-    voter: event.params.voter,
+    voter_id: event.params.voter,
     amount: event.params.amount,
     contest_id: gsVoting.id,
     mdProtocol: event.params._3[0],
     mdPointer: event.params._3[1],
-    isRectractVote: true,
+    isRetractVote: true,
   });
 
   context.ShipChoice.set({
