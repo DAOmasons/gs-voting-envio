@@ -156,6 +156,7 @@ Contest_v0_1_0Contract.ContestInitialized.handlerAsync(
         contestVersion: contestClone.contestVersion,
       })
     ) {
+      context.log.info(`SBT Voting`);
       if (
         halParams === undefined ||
         tvParams === undefined ||
@@ -188,7 +189,7 @@ Contest_v0_1_0Contract.ContestInitialized.handlerAsync(
         startTime: undefined,
         endTime: undefined,
         isVotingActive: false,
-        isSBTVoting: false,
+        isSBTVoting: true,
         totalVotes: 0n,
       });
       addTransaction(event, context.EnvioTX.set);

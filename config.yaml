@@ -61,6 +61,8 @@ networks:
       address: 
     - name: ERC20VotesPoints
       address:
+    - name: SBTBalancePoints
+      address:  
     - name: TimedVotes
       address:
     - name: Contest_v0_1_0
@@ -77,6 +79,8 @@ networks:
       address: 
     - name: ERC20VotesPoints
       address:
+    - name: SBTBalancePoints
+      address:  
     - name: TimedVotes
       address:
     - name: Contest_v0_1_0
