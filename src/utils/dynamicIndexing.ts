@@ -22,11 +22,11 @@ export const indexerModuleFactory = (
       event.params.moduleAddress
     );
   }
-  if (event.params.moduleName === Module.SBTBalancePoints_v0_1_0) {
-    context.contractRegistration.addSBTBalancePoints(
-      event.params.moduleAddress
-    );
-  }
+  // if (event.params.moduleName === Module.SBTBalancePoints_v0_1_0) {
+  //   context.contractRegistration.addSBTBalancePoints(
+  //     event.params.moduleAddress
+  //   );
+  // }
 };
 
 export const indexContestVersionFactory = (

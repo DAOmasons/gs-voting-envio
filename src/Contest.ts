@@ -25,18 +25,9 @@ Contest_v0_1_0Contract.ContestInitialized.handlerAsync(
       event.params.pointsModule
     );
 
-    // context.log.info(`contestClone ${contestClone}`);
-    // context.log.info(`votingModule ${votingModule}`);
-    // context.log.info(`pointsModule ${pointsModule}`);
-    // context.log.info(`choicesModule ${choicesModule}`);
-    // context.log.info(`executionModule ${executionModule}`);
-    // context.log.info(`halParams ${halParams}`);
-    // context.log.info(`tvParams ${tvParams}`);
-    // context.log.info(`ercPointParams ${ercPointParams}`);
-
-    // const sbtBalParams = await context.SBTBalParams.get(
-    //   event.params.pointsModule
-    // );
+    const sbtBalParams = await context.SBTBalParams.get(
+      event.params.pointsModule
+    );
     if (
       contestClone === undefined ||
       votingModule === undefined ||
@@ -131,7 +122,7 @@ Contest_v0_1_0Contract.ContestInitialized.handlerAsync(
 
         if (ercPointParams === undefined) {
           context.log.error(
-            `!!! ERCPointParams not found: ID ${event.params.pointsModule}, `
+            `ERCPointParams not found: ID ${event.params.pointsModule}, `
           );
         }
         return;
@@ -150,25 +141,25 @@ Contest_v0_1_0Contract.ContestInitialized.handlerAsync(
         isVotingActive: false,
         totalVotes: 0n,
       });
-      context.log.info(`Normal Voting`);
 
       addTransaction(event, context.EnvioTX.set);
       return;
     }
 
-    // if (
-    //   isSBTVoting({
-    //     choiceModuleName: choicesModule.moduleName,
-    //     votesModuleName: votingModule.moduleName,
-    //     pointsModuleName: pointsModule.moduleName,
-    //     executionModuleName: executionModule.moduleName,
-    //     contestVersion: contestClone.contestVersion,
-    //   })
-    // ) {
-    //   addTransaction(event, context.EnvioTX.set);
-    //   context.log.info(`SBT Voting`);
-    //   return;
-    // }
+    if (
+      isSBTVoting({
+        choiceModuleName: choicesModule.moduleName,
+        votesModuleName: votingModule.moduleName,
+        pointsModuleName: pointsModule.moduleName,
+        executionModuleName: executionModule.moduleName,
+        contestVersion: contestClone.contestVersion,
+      })
+    ) {
+      addTransaction(event, context.EnvioTX.set);
+      context.log.info(`SBT Voting!!!`);
+      return;
+    }
+    context.log.info(`Didn't find config!!!`);
   }
 );
 

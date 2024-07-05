@@ -1,9 +1,10 @@
-import { ERC20VotesPointsContract } from 'generated';
+import { ERC20VotesPointsContract, SBTBalancePointsContract } from 'generated';
 import { addTransaction } from './utils/sync';
+import { SBTBalancePoints } from 'generated/src/TestHelpers.gen';
 
-ERC20VotesPointsContract.Initialized.loader(() => {});
+SBTBalancePointsContract.Initialized.loader(() => {});
 
-ERC20VotesPointsContract.Initialized.handler(({ event, context }) => {
+SBTBalancePointsContract.Initialized.handler(({ event, context }) => {
   context.SBTBalParams.set({
     id: event.srcAddress,
     voteTokenAddress: event.params.token,
