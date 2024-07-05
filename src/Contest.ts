@@ -14,6 +14,7 @@ Contest_v0_1_0Contract.ContestInitialized.loader(({ event, context }) => {
   context.HALParams.load(event.params.choicesModule);
   context.TVParams.load(event.params.votesModule);
   context.ERCPointParams.load(event.params.pointsModule);
+  // context.SBTBalParams.load(event.params.pointsModule);
 });
 
 Contest_v0_1_0Contract.ContestInitialized.handler(({ event, context }) => {
@@ -26,16 +27,14 @@ Contest_v0_1_0Contract.ContestInitialized.handler(({ event, context }) => {
   const halParams = context.HALParams.get(event.params.choicesModule);
   const tvParams = context.TVParams.get(event.params.votesModule);
   const ercPointParams = context.ERCPointParams.get(event.params.pointsModule);
+  // const sbtBalParams = context.SBTBalParams.get(event.params.pointsModule);
 
   if (
     contestClone === undefined ||
     votingModule === undefined ||
     pointsModule === undefined ||
     choicesModule === undefined ||
-    executionModule === undefined ||
-    halParams === undefined ||
-    tvParams === undefined ||
-    ercPointParams === undefined
+    executionModule === undefined
   ) {
     if (contestClone === undefined)
       context.log.error(
@@ -57,16 +56,7 @@ Contest_v0_1_0Contract.ContestInitialized.handler(({ event, context }) => {
       context.log.error(
         `ExecutionModule not found: Module address ${event.params.executionModule}`
       );
-    if (halParams === undefined)
-      context.log.error(
-        `HALParams not found: ID ${event.params.choicesModule}`
-      );
-    if (tvParams === undefined)
-      context.log.error(`TVParams not found: ID ${event.params.votesModule}`);
-    if (ercPointParams === undefined)
-      context.log.error(
-        `ERCPointParams not found: ID ${event.params.pointsModule}`
-      );
+
     return;
   }
 
@@ -117,6 +107,25 @@ Contest_v0_1_0Contract.ContestInitialized.handler(({ event, context }) => {
       contestVersion: contestClone.contestVersion,
     })
   ) {
+    if (
+      halParams === undefined ||
+      tvParams === undefined ||
+      ercPointParams === undefined
+    ) {
+      if (halParams === undefined)
+        context.log.error(
+          `HALParams not found: ID ${event.params.choicesModule}`
+        );
+      if (tvParams === undefined)
+        context.log.error(`TVParams not found: ID ${event.params.votesModule}`);
+
+      if (ercPointParams === undefined)
+        context.log.error(
+          `ERCPointParams not found: ID ${event.params.pointsModule}`
+        );
+      return;
+    }
+
     context.GrantShipsVoting.set({
       id: event.srcAddress,
       contest_id: contestClone.contestAddress,

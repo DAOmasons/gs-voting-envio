@@ -82,6 +82,11 @@ type ERCPointParams {
   votingCheckpoint: BigInt!
 }
 
+type SBTBalParams {
+  id: ID!
+  voteTokenAddress: String!
+}
+
 type ShipChoice {
   id: ID!
   contest: GrantShipsVoting!

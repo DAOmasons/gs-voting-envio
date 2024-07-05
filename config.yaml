@@ -30,6 +30,10 @@ contracts:
   handler: src/ERC20VotesPoints.ts
   events:
   - event: Initialized(address contest, address token, uint256 votingCheckpoint)
+- name: SBTBalancePoints  
+  handler: src/SBTBalancePoints.ts
+  events:
+  - event: Initialized(address contest, address token)
 - name: TimedVotes
   handler: src/TimedVotes.ts
   events:
