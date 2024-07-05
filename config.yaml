@@ -48,6 +48,7 @@ contracts:
   handler: src/Contest.ts
   events:
   - event: ContestInitialized(address votesModule, address pointsModule, address choicesModule, address executionModule, bool isContinuous, bool isRetractable, uint8 status)
+    isAsync: true
   - event: ContestStatusChanged(uint8 status)
 networks:
 - id: 421614 # Arbitrum Sepolia
