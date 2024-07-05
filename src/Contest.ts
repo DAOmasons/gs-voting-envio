@@ -139,6 +139,7 @@ Contest_v0_1_0Contract.ContestInitialized.handlerAsync(
         startTime: undefined,
         endTime: undefined,
         isVotingActive: false,
+        isSBTVoting: false,
         totalVotes: 0n,
       });
 
@@ -155,8 +156,42 @@ Contest_v0_1_0Contract.ContestInitialized.handlerAsync(
         contestVersion: contestClone.contestVersion,
       })
     ) {
+      if (
+        halParams === undefined ||
+        tvParams === undefined ||
+        sbtBalParams === undefined
+      ) {
+        if (halParams === undefined)
+          context.log.error(
+            `HALParams not found: ID ${event.params.choicesModule}`
+          );
+        if (tvParams === undefined)
+          context.log.error(
+            `TVParams not found: ID ${event.params.votesModule}`
+          );
+
+        if (sbtBalParams === undefined) {
+          context.log.error(
+            `SBTBalParams not found: ID ${event.params.pointsModule}, `
+          );
+        }
+        return;
+      }
+      context.GrantShipsVoting.set({
+        id: event.srcAddress,
+        contest_id: contestClone.contestAddress,
+        hatId: halParams.hatId,
+        hatsAddress: halParams.hatsAddress,
+        voteTokenAddress: sbtBalParams.voteTokenAddress,
+        votingCheckpoint: 0n,
+        voteDuration: tvParams.voteDuration,
+        startTime: undefined,
+        endTime: undefined,
+        isVotingActive: false,
+        isSBTVoting: false,
+        totalVotes: 0n,
+      });
       addTransaction(event, context.EnvioTX.set);
-      context.log.info(`SBT Voting!!!`);
       return;
     }
     context.log.info(`Didn't find config!!!`);

@@ -1,13 +1,12 @@
-import { ERC20VotesPointsContract, SBTBalancePointsContract } from 'generated';
-import { addTransaction } from './utils/sync';
-import { SBTBalancePoints } from 'generated/src/TestHelpers.gen';
+// import { SBTBalancePointsContract } from 'generated';
+// import { addTransaction } from './utils/sync';
 
-SBTBalancePointsContract.Initialized.loader(() => {});
+// SBTBalancePointsContract.Initialized.loader(() => {});
 
-SBTBalancePointsContract.Initialized.handler(({ event, context }) => {
-  context.SBTBalParams.set({
-    id: event.srcAddress,
-    voteTokenAddress: event.params.token,
-  });
-  addTransaction(event, context.EnvioTX.set);
-});
+// SBTBalancePointsContract.Initialized.handler(({ event, context }) => {
+//   context.SBTBalParams.set({
+//     id: event.srcAddress,
+//     voteTokenAddress: event.params.token,
+//   });
+//   addTransaction(event, context.EnvioTX.set);
+// });
