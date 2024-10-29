@@ -1,10 +1,8 @@
-import { HatsAllowListContract } from 'generated';
+import { HatsAllowList } from 'generated';
 import { createChoiceId } from './utils/id';
 import { addTransaction } from './utils/sync';
 
-HatsAllowListContract.Initialized.loader(() => {});
-
-HatsAllowListContract.Initialized.handler(({ event, context }) => {
+HatsAllowList.Initialized.handler(async ({ event, context }) => {
   context.HALParams.set({
     id: event.srcAddress,
     hatId: event.params.hatId,
@@ -13,12 +11,9 @@ HatsAllowListContract.Initialized.handler(({ event, context }) => {
   addTransaction(event, context.EnvioTX.set);
 });
 
-HatsAllowListContract.Registered.loader(({ event, context }) => {
-  context.StemModule.load(event.srcAddress, undefined);
-});
 
-HatsAllowListContract.Registered.handler(({ event, context }) => {
-  const stemModule = context.StemModule.get(event.srcAddress);
+HatsAllowList.Registered.handler(async ({ event, context }) => {
+  const stemModule = await context.StemModule.get(event.srcAddress);
   if (stemModule === undefined) {
     context.log.error(
       `StemModule not found: Module address ${event.srcAddress}`
@@ -49,9 +44,7 @@ HatsAllowListContract.Registered.handler(({ event, context }) => {
   addTransaction(event, context.EnvioTX.set);
 });
 
-HatsAllowListContract.Removed.loader(() => {});
-
-HatsAllowListContract.Removed.handlerAsync(async ({ event, context }) => {
+HatsAllowList.Removed.handler(async ({ event, context }) => {
   const stemModule = await context.StemModule.get(event.srcAddress);
   if (stemModule === undefined) {
     context.log.error(

@@ -1,11 +1,9 @@
-import { Contest_v0_1_0Contract, GrantShipsVotingEntity } from 'generated';
+import { Contest_v0_1_0 } from 'generated';
 import { isGrantShipsVoting, isSBTVoting } from './utils/dynamicIndexing';
 import { addTransaction } from './utils/sync';
 import { ContestStatus } from './utils/constants';
 
-Contest_v0_1_0Contract.ContestInitialized.loader(({ event, context }) => {});
-
-Contest_v0_1_0Contract.ContestInitialized.handlerAsync(
+Contest_v0_1_0.ContestInitialized.handler(
   async ({ event, context }) => {
     const contestClone = await context.ContestClone.get(event.srcAddress);
     const votingModule = await context.StemModule.get(event.params.votesModule);
@@ -199,14 +197,9 @@ Contest_v0_1_0Contract.ContestInitialized.handlerAsync(
   }
 );
 
-Contest_v0_1_0Contract.ContestStatusChanged.loader(({ event, context }) => {
-  context.Contest.load(event.srcAddress, undefined);
-  context.GrantShipsVoting.load(event.srcAddress, undefined);
-});
-
-Contest_v0_1_0Contract.ContestStatusChanged.handler(({ event, context }) => {
-  const contest = context.Contest.get(event.srcAddress);
-  const grantShipsVoting = context.GrantShipsVoting.get(event.srcAddress);
+Contest_v0_1_0.ContestStatusChanged.handler(async ({ event, context }) => {
+  const contest = await context.Contest.get(event.srcAddress);
+  const grantShipsVoting = await context.GrantShipsVoting.get(event.srcAddress);
   if (contest === undefined) {
     context.log.error(
       `GrantShipsVoting not found: Contest address ${event.srcAddress}`

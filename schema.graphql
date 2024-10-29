@@ -6,7 +6,7 @@ type FactoryEventsSummary {
   moduleTemplateCount: BigInt!
   moduleCloneCount: BigInt!
   contestBuiltCount: BigInt!
-  ContestCloneCount: BigInt!
+  contestCloneCount: BigInt!
 }
 
 type ContestTemplate {

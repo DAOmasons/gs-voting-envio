@@ -1,4 +1,9 @@
 name: gs-voting
+unordered_multichain_mode: true
+field_selection: 
+  transaction_fields:
+    - hash
+    - from
 contracts:
 - name: HatsPoster
   handler: src/HatsPoster.ts
@@ -24,8 +29,7 @@ contracts:
   events: 
   - event: Initialized(address contest, address hatsAddress, uint256 hatId)
   - event: Registered(bytes32 choiceId, ((uint256, string), bytes, bool), address contest)
-  - event: Removed(bytes32 choiceId, address contest)
-    isAsync: true
+  - event: Removed(bytes32 choiceId, address contest)    
 - name: ERC20VotesPoints
   handler: src/ERC20VotesPoints.ts
   events:
@@ -38,22 +42,17 @@ contracts:
   handler: src/TimedVotes.ts
   events:
   - event: Initialized(address contest, uint256 duration)
-  - event: VotingStarted(uint256 startTime, uint256 endTime)
-    isAsync: true
-  - event: VoteCast(address indexed voter, bytes32 choiceId, uint256 amount, (uint256, string))
-    isAsync: true
-  - event: VoteRetracted(address indexed voter, bytes32 choiceId, uint256 amount, (uint256, string))
-    isAsync: true
+  - event: VotingStarted(uint256 startTime, uint256 endTime)    
+  - event: VoteCast(address indexed voter, bytes32 choiceId, uint256 amount, (uint256, string))    
+  - event: VoteRetracted(address indexed voter, bytes32 choiceId, uint256 amount, (uint256, string))    
 - name: Contest_v0_1_0
   handler: src/Contest.ts
   events:
-  - event: ContestInitialized(address votesModule, address pointsModule, address choicesModule, address executionModule, bool isContinuous, bool isRetractable, uint8 status)
-    isAsync: true
+  - event: ContestInitialized(address votesModule, address pointsModule, address choicesModule, address executionModule, bool isContinuous, bool isRetractable, uint8 status)    
   - event: ContestStatusChanged(uint8 status)
 networks:
 - id: 421614 # Arbitrum Sepolia
-  start_block: 47672386
-  end_block: null
+  start_block: 47672386  
   contracts:
     - name: FastFactory
       address: 0x2bABC10b90c67399F820433358fEb85fbB24f22f
@@ -70,8 +69,7 @@ networks:
     - name: HatsPoster
       address: 0x4F0dc1C7d91d914d921F3C9C188F4454AE260317
 - id: 42161 # Arbitrum One
-  start_block: 215395477
-  end_block: null
+  start_block: 215395477  
   contracts:
     - name: FastFactory
       address: 0x98917Fe3554acFB9f982F6A4fE5Ad377EE55ee70

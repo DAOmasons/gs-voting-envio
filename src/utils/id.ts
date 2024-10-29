@@ -9,7 +9,7 @@ export const createChoiceId = ({
 }) => `choice-${choiceId}-${contestAddress}`;
 
 export const createVoteId = (event: eventLog<unknown>) =>
-  `vote-${event.transactionHash}-${event.logIndex}`;
+  `vote-${event.transaction.hash}-${event.logIndex}`;
 
 export const addChainId = (event: eventLog<unknown>, id: string) => {
   return `${id}-${event.chainId}`;

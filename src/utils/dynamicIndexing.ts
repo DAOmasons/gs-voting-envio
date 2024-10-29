@@ -1,40 +1,40 @@
 import {
-  FastFactoryContract_ContestClonedEvent_eventArgs,
-  FastFactoryContract_ContestClonedEvent_loaderContext,
-  FastFactoryContract_ModuleClonedEvent_eventArgs,
-  FastFactoryContract_ModuleClonedEvent_loaderContext,
+  contractRegistrations,
+  FastFactory_ModuleTemplateCreated_eventArgs,  
+  FastFactory_ModuleCloned_eventArgs,
+  FastFactory_ContestCloned_eventArgs,
   eventLog,
 } from 'generated';
 import { ContestVersion, Module } from './constants';
 
 export const indexerModuleFactory = (
-  event: eventLog<FastFactoryContract_ModuleClonedEvent_eventArgs>,
-  context: FastFactoryContract_ModuleClonedEvent_loaderContext
+  event: eventLog<FastFactory_ModuleCloned_eventArgs | FastFactory_ModuleCloned_eventArgs>,
+  context: contractRegistrations
 ) => {
   if (event.params.moduleName === Module.HatsAllowList_v0_1_1) {
-    context.contractRegistration.addHatsAllowList(event.params.moduleAddress);
+    context.addHatsAllowList(event.params.moduleAddress);
   }
   if (event.params.moduleName === Module.TimedVotes_v0_1_1) {
-    context.contractRegistration.addTimedVotes(event.params.moduleAddress);
+    context.addTimedVotes(event.params.moduleAddress);
   }
   if (event.params.moduleName === Module.ERC20VotesPoints_v0_1_1) {
-    context.contractRegistration.addERC20VotesPoints(
+    context.addERC20VotesPoints(
       event.params.moduleAddress
     );
   }
   if (event.params.moduleName === Module.SBTBalancePoints_v0_1_1) {
-    context.contractRegistration.addSBTBalancePoints(
+    context.addSBTBalancePoints(
       event.params.moduleAddress
     );
   }
 };
 
 export const indexContestVersionFactory = (
-  event: eventLog<FastFactoryContract_ContestClonedEvent_eventArgs>,
-  context: FastFactoryContract_ContestClonedEvent_loaderContext
+  event: eventLog<FastFactory_ContestCloned_eventArgs>,
+  context: contractRegistrations
 ) => {
   if (event.params.contestVersion === ContestVersion.v0_1_0) {
-    context.contractRegistration.addContest_v0_1_0(event.params.contestAddress);
+    context.addContest_v0_1_0(event.params.contestAddress);
     return;
   }
 };

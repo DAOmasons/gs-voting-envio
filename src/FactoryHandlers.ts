@@ -1,7 +1,7 @@
 import {
-  FastFactoryContract,
-  FactoryEventsSummaryEntity,
-  ContestTemplateEntity,
+  FastFactory,
+  FactoryEventsSummary,
+  ContestTemplate,
 } from 'generated';
 
 import {
@@ -14,7 +14,7 @@ import { addChainId } from './utils/id';
 export const FACTORY_EVENTS_SUMMARY_KEY = 'GlobalEventsSummary';
 const FACTORY_ADDRESS = '0x3a190e45f300cbb8AB1153a90b23EE3333b02D9d';
 
-const FACTORY_EVENTS_SUMMARY: FactoryEventsSummaryEntity = {
+const FACTORY_EVENTS_SUMMARY: FactoryEventsSummary = {
   id: FACTORY_EVENTS_SUMMARY_KEY,
   address: FACTORY_ADDRESS,
   admins: [],
@@ -29,16 +29,13 @@ const FACTORY_EVENTS_SUMMARY: FactoryEventsSummaryEntity = {
 /// ======= FACTORY INIT ==========
 /// ===============================
 
-FastFactoryContract.FactoryInitialized.loader(({ context }) => {
-  context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
-});
 
-FastFactoryContract.FactoryInitialized.handler(({ event, context }) => {
-  const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
+FastFactory.FactoryInitialized.handler(async ({ event, context }) => {
+  const summary = await context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
 
   const admin = event.params.admin;
 
-  const currentSummaryEntity: FactoryEventsSummaryEntity =
+  const currentSummaryEntity: FactoryEventsSummary =
     summary ?? FACTORY_EVENTS_SUMMARY;
 
   context.FactoryEventsSummary.set({
@@ -51,14 +48,10 @@ FastFactoryContract.FactoryInitialized.handler(({ event, context }) => {
 /// ======= ADMIN ADDED ===========
 /// ===============================
 
-FastFactoryContract.AdminAdded.loader(({ context }) => {
-  context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
-});
+FastFactory.AdminAdded.handler(async ({ event, context }) => {
+  const summary = await context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
 
-FastFactoryContract.AdminAdded.handler(({ event, context }) => {
-  const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
-
-  const currentSummaryEntity: FactoryEventsSummaryEntity =
+  const currentSummaryEntity: FactoryEventsSummary =
     summary ?? FACTORY_EVENTS_SUMMARY;
 
   const newAdmin = event.params.admin;
@@ -76,14 +69,11 @@ FastFactoryContract.AdminAdded.handler(({ event, context }) => {
 /// ======= ADMIN REMOVED =========
 /// ===============================
 
-FastFactoryContract.AdminRemoved.loader(({ context }) => {
-  context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
-});
 
-FastFactoryContract.AdminRemoved.handler(({ event, context }) => {
-  const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
+FastFactory.AdminRemoved.handler(async ({ event, context }) => {
+  const summary = await context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
 
-  const currentSummaryEntity: FactoryEventsSummaryEntity =
+  const currentSummaryEntity: FactoryEventsSummary =
     summary ?? FACTORY_EVENTS_SUMMARY;
 
   const removedAdmin = event.params.admin;
@@ -103,14 +93,10 @@ FastFactoryContract.AdminRemoved.handler(({ event, context }) => {
 /// ==== ADD CONTEST TEMPLATE =====
 /// ===============================
 
-FastFactoryContract.ContestTemplateCreated.loader(({ context }) => {
-  context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
-});
+FastFactory.ContestTemplateCreated.handler(async ({ event, context }) => {
+  const summary = await context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
 
-FastFactoryContract.ContestTemplateCreated.handler(({ event, context }) => {
-  const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
-
-  const currentSummaryEntity: FactoryEventsSummaryEntity =
+  const currentSummaryEntity: FactoryEventsSummary =
     summary ?? FACTORY_EVENTS_SUMMARY;
 
   const nextSummaryEntity = {
@@ -118,7 +104,7 @@ FastFactoryContract.ContestTemplateCreated.handler(({ event, context }) => {
     contestTemplateCount: currentSummaryEntity.contestTemplateCount + 1n,
   };
 
-  const contestTemplate: ContestTemplateEntity = {
+  const contestTemplate: ContestTemplate = {
     id: addChainId(event, event.params.contestVersion),
     contestVersion: event.params.contestVersion,
     contestAddress: event.params.contestAddress,
@@ -136,15 +122,10 @@ FastFactoryContract.ContestTemplateCreated.handler(({ event, context }) => {
 /// ==== DELETE CONTEST TEMPLATE ==
 /// ===============================
 
-FastFactoryContract.ContestTemplateDeleted.loader(({ event, context }) => {
-  context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
-  context.ContestTemplate.load(addChainId(event, event.params.contestVersion));
-});
+FastFactory.ContestTemplateDeleted.handler(async ({ event, context }) => {
+  const summary = await context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
 
-FastFactoryContract.ContestTemplateDeleted.handler(({ event, context }) => {
-  const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
-
-  const currentSummaryEntity: FactoryEventsSummaryEntity =
+  const currentSummaryEntity: FactoryEventsSummary =
     summary ?? FACTORY_EVENTS_SUMMARY;
 
   const nextSummaryEntity = {
@@ -152,7 +133,7 @@ FastFactoryContract.ContestTemplateDeleted.handler(({ event, context }) => {
     contestTemplateCount: currentSummaryEntity.contestTemplateCount - 1n,
   };
 
-  const contest = context.ContestTemplate.get(
+  const contest = await context.ContestTemplate.get(
     addChainId(event, event.params.contestVersion)
   );
 
@@ -163,7 +144,7 @@ FastFactoryContract.ContestTemplateDeleted.handler(({ event, context }) => {
     return;
   }
 
-  const deletedContestTemplate: ContestTemplateEntity = {
+  const deletedContestTemplate: ContestTemplate = {
     ...contest,
     active: false,
   };
@@ -177,14 +158,11 @@ FastFactoryContract.ContestTemplateDeleted.handler(({ event, context }) => {
 /// ==== ADD MODULE TEMPLATE ======
 /// ===============================
 
-FastFactoryContract.ModuleTemplateCreated.loader(({ context }) => {
-  context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
-});
 
-FastFactoryContract.ModuleTemplateCreated.handler(({ event, context }) => {
-  const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
+FastFactory.ModuleTemplateCreated.handler(async ({ event, context }) => {
+  const summary = await context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
 
-  const currentSummaryEntity: FactoryEventsSummaryEntity =
+  const currentSummaryEntity: FactoryEventsSummary =
     summary ?? FACTORY_EVENTS_SUMMARY;
 
   const nextSummaryEntity = {
@@ -208,15 +186,11 @@ FastFactoryContract.ModuleTemplateCreated.handler(({ event, context }) => {
 /// === DELETE MODULE TEMPLATE ====
 /// ===============================
 
-FastFactoryContract.ModuleTemplateDeleted.loader(({ event, context }) => {
-  context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
-  context.ModuleTemplate.load(addChainId(event, event.params.moduleName));
-});
 
-FastFactoryContract.ModuleTemplateDeleted.handler(({ event, context }) => {
-  const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
+FastFactory.ModuleTemplateDeleted.handler(async ({ event, context }) => {
+  const summary = await context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
 
-  const currentSummaryEntity: FactoryEventsSummaryEntity =
+  const currentSummaryEntity: FactoryEventsSummary =
     summary ?? FACTORY_EVENTS_SUMMARY;
 
   const nextSummaryEntity = {
@@ -224,7 +198,7 @@ FastFactoryContract.ModuleTemplateDeleted.handler(({ event, context }) => {
     moduleTemplateCount: currentSummaryEntity.moduleTemplateCount - 1n,
   };
 
-  const newModule = context.ModuleTemplate.get(
+  const newModule = await context.ModuleTemplate.get(
     addChainId(event, event.params.moduleName)
   );
 
@@ -243,15 +217,15 @@ FastFactoryContract.ModuleTemplateDeleted.handler(({ event, context }) => {
   addTransaction(event, context.EnvioTX.set);
 });
 
-FastFactoryContract.ModuleCloned.loader(({ event, context }) => {
-  context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
+
+FastFactory.ModuleCloned.contractRegister(({ event, context }) => {  
   indexerModuleFactory(event, context);
 });
 
-FastFactoryContract.ModuleCloned.handler(({ event, context }) => {
-  const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
+FastFactory.ModuleCloned.handler(async ({ event, context }) => {
+  const summary = await context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
 
-  const currentSummaryEntity: FactoryEventsSummaryEntity =
+  const currentSummaryEntity: FactoryEventsSummary =
     summary ?? FACTORY_EVENTS_SUMMARY;
 
   const nextSummaryEntity = {
@@ -276,15 +250,14 @@ FastFactoryContract.ModuleCloned.handler(({ event, context }) => {
 /// ======= CONTEST CLONED ========
 /// ===============================
 
-FastFactoryContract.ContestCloned.loader(({ event, context }) => {
-  context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
+FastFactory.ContestCloned.contractRegister(({ event, context }) => {
   indexContestVersionFactory(event, context);
 });
 
-FastFactoryContract.ContestCloned.handler(({ event, context }) => {
-  const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
+FastFactory.ContestCloned.handler(async ({ event, context }) => {
+  const summary = await context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
 
-  const currentSummaryEntity: FactoryEventsSummaryEntity =
+  const currentSummaryEntity: FactoryEventsSummary =
     summary ?? FACTORY_EVENTS_SUMMARY;
 
   const nextSummaryEntity = {
@@ -306,14 +279,10 @@ FastFactoryContract.ContestCloned.handler(({ event, context }) => {
 /// ======= CONTEST BUILT =========
 /// ===============================
 
-FastFactoryContract.ContestBuilt.loader(({ event, context }) => {
-  context.FactoryEventsSummary.load(FACTORY_EVENTS_SUMMARY_KEY);
-});
+FastFactory.ContestBuilt.handler(async ({ event, context }) => {
+  const summary = await context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
 
-FastFactoryContract.ContestBuilt.handler(({ event, context }) => {
-  const summary = context.FactoryEventsSummary.get(FACTORY_EVENTS_SUMMARY_KEY);
-
-  const currentSummaryEntity: FactoryEventsSummaryEntity =
+  const currentSummaryEntity: FactoryEventsSummary =
     summary ?? FACTORY_EVENTS_SUMMARY;
 
   const nextSummaryEntity = {

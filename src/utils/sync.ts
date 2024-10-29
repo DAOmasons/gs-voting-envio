@@ -1,14 +1,14 @@
-import { eventLog, envioTXEntity } from 'generated';
+import { eventLog, envioTX } from 'generated';
 
 export const addTransaction = (
   event: eventLog<unknown>,
-  set: (_1: envioTXEntity) => void
+  set: (_1: envioTX) => void
 ) => {
   set({
-    id: event.transactionHash,
-    blockNumber: BigInt(event.blockNumber),
+    id: event.transaction.hash,
+    blockNumber: BigInt(event.block.number),
     srcAddress: event.srcAddress,
-    txOrigin: event.txOrigin,
-    txHash: event.transactionHash,
+    txOrigin: event.transaction.from,
+    txHash: event.transaction.hash,
   });
 };

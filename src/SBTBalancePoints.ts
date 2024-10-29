@@ -1,9 +1,7 @@
-import { SBTBalancePointsContract } from 'generated';
+import { SBTBalancePoints } from 'generated';
 import { addTransaction } from './utils/sync';
 
-SBTBalancePointsContract.Initialized.loader(() => {});
-
-SBTBalancePointsContract.Initialized.handler(({ event, context }) => {
+SBTBalancePoints.Initialized.handler(async ({ event, context }) => {
   context.SBTBalParams.set({
     id: event.srcAddress,
     voteTokenAddress: event.params.token,

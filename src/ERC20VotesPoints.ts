@@ -1,9 +1,7 @@
-import { ERC20VotesPointsContract } from 'generated';
+import { ERC20VotesPoints } from 'generated';
 import { addTransaction } from './utils/sync';
 
-ERC20VotesPointsContract.Initialized.loader(() => {});
-
-ERC20VotesPointsContract.Initialized.handler(({ event, context }) => {
+ERC20VotesPoints.Initialized.handler(async ({ event, context }) => {
   context.ERCPointParams.set({
     id: event.srcAddress,
     voteTokenAddress: event.params.token,
